@@ -104,6 +104,15 @@
   border-bottom-left-radius: 4px;
 }
 
+.clank-message-loading {
+  animation: clank-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes clank-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
 .clank-chat-input {
   display: flex;
   gap: 8px;
