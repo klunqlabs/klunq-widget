@@ -1,15 +1,232 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Clank Widget - Dev</title>
+  <title>Clank Widget — Playground</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1e293b;
+      background: #f8fafc;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    header {
+      margin-bottom: 2rem;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+    }
+
+    header p {
+      color: #64748b;
+      margin-top: 0.25rem;
+    }
+
+    section {
+      background: #fff;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    section h2 {
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    #content-section p {
+      margin-bottom: 0.75rem;
+    }
+
+    #content-section p:last-child {
+      margin-bottom: 0;
+    }
+
+    .highlight-target {
+      background: #fef9c3;
+      padding: 0.75rem;
+      border-radius: 4px;
+      border-left: 3px solid #eab308;
+    }
+
+    #links-section ul {
+      list-style: none;
+    }
+
+    #links-section li {
+      margin-bottom: 0.5rem;
+    }
+
+    #links-section a {
+      color: #6366f1;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    #links-section a:hover {
+      text-decoration: underline;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-group button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.15s;
+    }
+
+    .btn-alert {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .btn-alert:hover {
+      background: #fecaca;
+    }
+
+    .btn-toggle {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .btn-toggle:hover {
+      background: #bfdbfe;
+    }
+
+    .btn-counter {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .btn-counter:hover {
+      background: #bbf7d0;
+    }
+
+    #counter-value {
+      font-weight: 700;
+      font-size: 1.25rem;
+      margin-left: 0.5rem;
+    }
+
+    #toggle-area {
+      margin-top: 0.75rem;
+      padding: 0.75rem;
+      background: #f1f5f9;
+      border-radius: 4px;
+    }
+
+    #toggle-area.hidden {
+      display: none;
+    }
+
+    #tool-log {
+      background: #1e293b;
+      color: #e2e8f0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      padding: 0.75rem;
+      border-radius: 4px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    #tool-log .entry {
+      padding: 0.25rem 0;
+      border-bottom: 1px solid #334155;
+    }
+
+    #tool-log .entry:last-child {
+      border-bottom: none;
+    }
+
+    .tool-highlight {
+      outline: 3px solid #f59e0b !important;
+      outline-offset: 2px;
+      transition: outline 0.15s;
+    }
+  </style>
 </head>
+
 <body>
-  <p style="font-family: sans-serif; padding: 2rem; color: #666;">
-    Dev sandbox for Clank widget. The floating button should appear
-    in the bottom-right corner.
-  </p>
+
+  <header>
+    <h1>Clank Widget Playground</h1>
+    <p>Test the agent's ability to read content, follow links, and click elements on this page.</p>
+  </header>
+
+  <section id="content-section">
+    <h2>Content for summarization</h2>
+    <p>The Clank project is an embeddable AI chat widget built with LangChain and Preact. It is designed to be added to
+      any existing web page with zero side effects. The widget appears as a floating button in the bottom-right corner
+      of the page. When clicked, it opens a chat interface where users can interact with an AI agent powered by
+      LangChain.</p>
+    <p class="highlight-target">The agent has access to tools that allow it to read page content, click buttons, and
+      follow links. This makes it capable of helping users navigate the page, summarize information, and trigger
+      interactive elements on behalf of the user. All tool interactions are visible through element highlighting and the
+      log panel below.</p>
+    <p>LangChain is a framework for developing applications powered by large language models. It provides abstractions
+      for prompt templates, output parsing, tool use, and agent loops. Preact is a fast 3kB alternative to React with
+      the same modern API, making it ideal for lightweight widget bundles.</p>
+  </section>
+
+  <section id="links-section">
+    <h2>Links</h2>
+    <ul>
+      <li><a href="https://langchain.com" id="link-langchain" target="_blank">LangChain documentation</a></li>
+      <li><a href="https://preactjs.com" id="link-preact" target="_blank">Preact website</a></li>
+      <li><a href="#content-section" id="link-jump">Jump to content section</a></li>
+    </ul>
+  </section>
+
+  <section id="buttons-section">
+    <h2>Buttons</h2>
+    <div class="btn-group">
+      <button class="btn-alert" id="btn-alert" onclick="alert('Alert button was clicked!')">Show alert</button>
+      <button class="btn-toggle" id="btn-toggle" onclick="toggleContent()">Toggle extra content</button>
+      <button class="btn-counter" id="btn-counter" onclick="incrementCounter()">Counter (<span
+          id="counter-value">0</span>)</button>
+    </div>
+    <div id="toggle-area">This extra content was revealed by clicking the toggle button.</div>
+  </section>
+
+  <section>
+    <h2>Tool interaction log</h2>
+    <div id="tool-log"><span class="entry">Waiting for agent actions...</span></div>
+  </section>
+
+  <script>
+    function toggleContent() {
+      const area = document.getElementById('toggle-area');
+      area.classList.toggle('hidden');
+    }
+    let count = 0;
+    function incrementCounter() {
+      document.getElementById('counter-value').textContent = ++count;
+    }
+  </script>
   <script type="module" src="/src/main.tsx"></script>
 </body>
+
 </html>

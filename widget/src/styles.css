@@ -147,3 +147,10 @@
 .clank-chat-input button:hover {
   background: #4f46e5;
 }
+
+/* Agent tool interaction highlight — applied to page elements the agent clicks/reads */
+.tool-highlight {
+  outline: 3px solid #f59e0b !important;
+  outline-offset: 2px;
+  transition: outline 0.15s;
+}
