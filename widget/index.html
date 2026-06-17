@@ -166,6 +166,28 @@
       outline-offset: 2px;
       transition: outline 0.15s;
     }
+
+    #form-section .form-group { margin-bottom: 0.75rem; }
+    #form-section label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.25rem; color: #475569; }
+    #form-section input,
+    #form-section textarea,
+    #form-section select {
+      width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px;
+      font-size: 0.875rem; font-family: inherit; outline: none; transition: border-color 0.15s;
+    }
+    #form-section input:focus,
+    #form-section textarea:focus,
+    #form-section select:focus { border-color: #6366f1; }
+    .btn-submit {
+      padding: 0.5rem 1.25rem; border: none; border-radius: 6px; font-size: 0.875rem;
+      font-weight: 600; cursor: pointer; background: #6366f1; color: #fff; transition: background 0.15s;
+    }
+    .btn-submit:hover { background: #4f46e5; }
+    .form-output {
+      margin-top: 0.75rem; padding: 0.75rem; background: #f0fdf4; border: 1px solid #bbf7d0;
+      border-radius: 6px; font-size: 0.85rem; line-height: 1.5;
+    }
+    .form-output.hidden { display: none; }
   </style>
 </head>
 
@@ -211,6 +233,33 @@
     <div id="toggle-area">This extra content was revealed by clicking the toggle button.</div>
   </section>
 
+  <section id="form-section">
+    <h2>Form inputs</h2>
+    <div class="form-group">
+      <label for="input-name">Name</label>
+      <input type="text" id="input-name" placeholder="Enter your name" />
+    </div>
+    <div class="form-group">
+      <label for="input-email">Email</label>
+      <input type="email" id="input-email" placeholder="email@example.com" />
+    </div>
+    <div class="form-group">
+      <label for="input-message">Message</label>
+      <textarea id="input-message" placeholder="Write a message..." rows="3"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="input-topic">Topic</label>
+      <select id="input-topic">
+        <option value="">Select a topic...</option>
+        <option value="support">Support</option>
+        <option value="feedback">Feedback</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+    <button class="btn-submit" id="btn-submit" onclick="submitForm()">Submit</button>
+    <div id="form-output" class="form-output hidden"></div>
+  </section>
+
   <section>
     <h2>Tool interaction log</h2>
     <div id="tool-log"><span class="entry">Waiting for agent actions...</span></div>
@@ -224,6 +273,19 @@
     let count = 0;
     function incrementCounter() {
       document.getElementById('counter-value').textContent = ++count;
+    }
+    function submitForm() {
+      const name = document.getElementById('input-name').value;
+      const email = document.getElementById('input-email').value;
+      const message = document.getElementById('input-message').value;
+      const topic = document.getElementById('input-topic').value;
+      const output = document.getElementById('form-output');
+      output.innerHTML = '<strong>Form submitted:</strong><br>' +
+        'Name: ' + (name || '(empty)') + '<br>' +
+        'Email: ' + (email || '(empty)') + '<br>' +
+        'Message: ' + (message || '(empty)') + '<br>' +
+        'Topic: ' + (topic || '(not selected)');
+      output.classList.remove('hidden');
     }
   </script>
   <script type="module" src="/src/main.tsx"></script>
