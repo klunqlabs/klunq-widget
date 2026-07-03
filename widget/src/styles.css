@@ -1,6 +1,21 @@
 @import "tailwindcss";
 
 @theme {
+  --color-primary: #4CC1BC;
+  --color-on-primary: #00363a;
+  --color-primary-container: #dbfcff;
+  --color-on-primary-container: #002022;
+  --color-on-surface: #1b1b1d;
+  --color-on-surface-variant: #444748;
+  --color-surface-container-high: #ebeef0;
+  --color-surface-container-highest: #e5e8ea;
+  --color-green-600: #16a34a;
+  --spacing-margin-desktop: 24px;
+  --spacing-panel-width: 380px;
+  --font-body-md: Inter, sans-serif;
+  --font-label-mono: "JetBrains Mono", monospace;
+  --text-body-md: 14px;
+  --z-60: 60;
   --animate-slide-up: slide-up 0.3s ease-out;
 }
 
@@ -9,15 +24,189 @@
     opacity: 0;
     transform: translateY(16px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* Agent tool interaction highlight — applied to page elements the agent clicks/reads */
-.tool-highlight {
-  outline: 3px solid #f59e0b !important;
-  outline-offset: 2px;
-  transition: outline 0.15s;
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.glass-bubble {
+  background: rgba(0, 0, 0, 0.03);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.animate-pulse-accent {
+  animation: pulse-accent 2s infinite ease-in-out;
+}
+
+@keyframes pulse-accent {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 25px rgba(76, 193, 188, 0.3);
+  }
+
+  100% {
+    transform: scale(0.95);
+    opacity: 0.6;
+  }
+}
+
+.inner-glow-top {
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+}
+
+.custom-accent-border {
+  border-color: var(--color-primary);
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+.aura-eye-container {
+  width: 80px;
+  height: 80px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.aura-eye-container:hover {
+  transform: scale(1.05);
+  border-color: rgba(76, 193, 188, 0.2);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08), 0 0 15px rgba(76, 193, 188, 0.1);
+}
+
+.aura-eye-container:active {
+  transform: scale(0.96);
+}
+
+.orb-outer {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(76, 193, 188, 0.3) 0%, rgba(76, 193, 188, 0) 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse-glow 4s infinite ease-in-out;
+}
+
+.orb-inner {
+  width: 10px;
+  height: 10px;
+  background-color: #4CC1BC;
+  border-radius: 50%;
+  box-shadow: 0 0 12px #4CC1BC, 0 0 20px rgba(76, 193, 188, 0.5);
+  position: relative;
+  z-index: 10;
+}
+
+.orb-inner::after {
+  content: "";
+  position: absolute;
+  top: 1.5px;
+  left: 1.5px;
+  width: 2.5px;
+  height: 2.5px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.9;
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+.iris-scanner {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  border-top: 1px solid rgba(76, 193, 188, 0.15);
+  animation: rotate-scanner 6s linear infinite;
+}
+
+@keyframes rotate-scanner {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.interaction-text {
+  position: absolute;
+  bottom: -36px;
+  width: 200px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.4s ease;
+  font-family: Geist, sans-serif;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  color: #4CC1BC;
+  pointer-events: none;
+}
+
+.aura-eye-container:hover .interaction-text {
+  opacity: 0.4;
+  transform: translateY(0);
+
+}
+
+aside .orb-outer:hover .interaction-text {
+  opacity: 0.5;
+  transform: translateY(0);
+  bottom: -12px;
 }

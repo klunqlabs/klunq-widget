@@ -1,12 +1,16 @@
-import { useState } from "preact/hooks";
+import { useContext } from "preact/hooks";
 import { agent } from "../agent/agent";
-import { AIMessage, HumanMessage, BaseMessage } from "langchain";
+import { AIMessage, HumanMessage } from "langchain";
+import { MessagesContext } from "../App";
 
 export function useChat() {
-  const [messages, setMessages] = useState<BaseMessage[]>([
-    new AIMessage('Hello! How can I help you today?')
-  ]);
-  const [loading, setLoading] = useState(false);
+  const messageContext = useContext(MessagesContext);
+
+  if (messageContext === undefined) {
+    throw new Error('useChat must be used within a MessagesContext.Provider');
+  }
+
+  const { messages, setMessages, loading, setLoading } = messageContext;
 
   const sendMessage = async (text: string) => {
     const userMsg = new HumanMessage(text);
@@ -26,5 +30,9 @@ export function useChat() {
     }
   };
 
-  return { messages, loading, sendMessage };
+  const clearMessages = () => {
+    setMessages(messages.slice(0, 1));
+  }
+
+  return { messages, clearMessages, loading, sendMessage };
 }
