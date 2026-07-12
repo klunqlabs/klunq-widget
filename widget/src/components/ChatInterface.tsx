@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useContext } from "preact/hooks";
 import { AIMessage, HumanMessage } from "langchain";
+import snarkdown from 'snarkdown';
 import { useChat } from "../hooks/useChat";
 import { AppConfigContext } from "../App";
 
@@ -48,6 +49,11 @@ export default function ChatInterface({ onClose }: ChatInterfaceProps) {
     sendMessage(text);
   }
 
+  const renderContent = (content: string) => {
+    const html = snarkdown(content);
+    return <p class="leading-relaxed" dangerouslySetInnerHTML={{ __html: html }} />;
+  };
+
   return (
     <aside key={config.pos} class={`fixed ${config.pos === 'right' ? 'right-margin-desktop' : 'left-margin-desktop'} top-margin-desktop bottom-margin-desktop w-panel-width rounded-xl glass-panel shadow-2xl shadow-black/5 flex flex-col overflow-hidden z-50 animate-slide-up`}>
       <div class="p-6 border-b border-black/5 flex flex-col gap-4 shrink-0">
@@ -94,11 +100,11 @@ export default function ChatInterface({ onClose }: ChatInterfaceProps) {
               <div
                 class={
                   msg instanceof AIMessage
-                    ? "glass-bubble p-4 rounded-2xl rounded-tl-none max-w-[85%] inner-glow-top"
-                    : "self-end bg-primary text-on-primary p-4 rounded-2xl rounded-br-none max-w-[85%]"
+                    ? "glass-bubble p-4 rounded-2xl rounded-tl-none max-w-[85%] inner-glow-top prose"
+                    : "self-end bg-primary text-on-primary p-4 rounded-2xl rounded-br-none max-w-[85%] prose prose-invert"
                 }
               >
-                <p class="leading-relaxed">{String(msg.content)}</p>
+                {renderContent(String(msg.content))}
               </div>
             </div>
           ))}
