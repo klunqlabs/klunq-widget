@@ -167,27 +167,66 @@
       transition: outline 0.15s;
     }
 
-    #form-section .form-group { margin-bottom: 0.75rem; }
-    #form-section label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.25rem; color: #475569; }
+    #form-section .form-group {
+      margin-bottom: 0.75rem;
+    }
+
+    #form-section label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: #475569;
+    }
+
     #form-section input,
     #form-section textarea,
     #form-section select {
-      width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #cbd5e1; border-radius: 6px;
-      font-size: 0.875rem; font-family: inherit; outline: none; transition: border-color 0.15s;
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s;
     }
+
     #form-section input:focus,
     #form-section textarea:focus,
-    #form-section select:focus { border-color: #6366f1; }
+    #form-section select:focus {
+      border-color: #6366f1;
+    }
+
     .btn-submit {
-      padding: 0.5rem 1.25rem; border: none; border-radius: 6px; font-size: 0.875rem;
-      font-weight: 600; cursor: pointer; background: #6366f1; color: #fff; transition: background 0.15s;
+      padding: 0.5rem 1.25rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: #6366f1;
+      color: #fff;
+      transition: background 0.15s;
     }
-    .btn-submit:hover { background: #4f46e5; }
+
+    .btn-submit:hover {
+      background: #4f46e5;
+    }
+
     .form-output {
-      margin-top: 0.75rem; padding: 0.75rem; background: #f0fdf4; border: 1px solid #bbf7d0;
-      border-radius: 6px; font-size: 0.85rem; line-height: 1.5;
+      margin-top: 0.75rem;
+      padding: 0.75rem;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      line-height: 1.5;
     }
-    .form-output.hidden { display: none; }
+
+    .form-output.hidden {
+      display: none;
+    }
   </style>
 </head>
 
@@ -288,7 +327,15 @@
       output.classList.remove('hidden');
     }
   </script>
-  <script type="module" src="/src/main.tsx"></script>
+
+  <!-- Dev Script -->
+  <script type="module" src="/src/main.tsx" data-model="gemma4" data-api-key="ollama"
+    data-base-url="http://localhost:11434/v1"></script>
+
+  <!-- Prod Script -->
+  <!-- <script src="dist/clank-widget.js" data-model="gemma4" data-api-key="ollama"
+    data-base-url="http://localhost:11434/v1"></script> -->
+
 </body>
 
 </html>

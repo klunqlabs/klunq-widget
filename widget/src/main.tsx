@@ -1,5 +1,6 @@
 import { render } from "preact";
 import App from "./App";
+import { ModelConfig } from "./agent/agent";
 import styles from "./styles.css?inline";
 
 const highlightStyle = document.createElement("style");
@@ -19,4 +20,30 @@ shadow.appendChild(styleEl);
 const root = document.createElement("div");
 shadow.appendChild(root);
 
-render(<App />, root);
+let modelConfig: ModelConfig;
+
+if (import.meta.env.DEV) {
+  modelConfig = {
+    model: "gemma4",
+    apiKey: "ollama",
+    baseURL: "http://localhost:11434/v1"
+  }
+} else {
+  const scriptEl = document.currentScript as HTMLScriptElement | null;
+
+  if (!scriptEl) {
+    throw new Error('Widget must be loaded via <script...>');
+  }
+
+  if (!scriptEl.dataset.model || !scriptEl.dataset.apiKey || !scriptEl.dataset.baseUrl) {
+    throw new Error('Missing mandatory attributes.');
+  }
+
+  modelConfig = {
+    model: scriptEl.dataset.model,
+    apiKey: scriptEl.dataset.apiKey,
+    baseURL: scriptEl.dataset.baseUrl
+  }
+}
+
+render(<App modelConfig={modelConfig} />, root);

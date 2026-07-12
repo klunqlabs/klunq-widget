@@ -2,13 +2,11 @@ import { ChatOpenAI } from "@langchain/openai";
 import { createAgent } from "langchain";
 import { browserTools } from "./tools";
 
-const model = new ChatOpenAI({
-  model: "gemma4",
-  apiKey: "ollama",
-  configuration: {
-    baseURL: "http://localhost:11434/v1"
-  }
-})
+export interface ModelConfig {
+  model: string,
+  apiKey: string,
+  baseURL: string,
+}
 
 const SYSTEM_PROMPT = `You are an AI assistant that acts as the user's direct interface to the webpage they are viewing. The user never clicks, types, or navigates — you do it all for them.
 
@@ -28,8 +26,18 @@ const SYSTEM_PROMPT = `You are an AI assistant that acts as the user's direct in
 4. **After clicking or navigating, verify.** Read the new page state to confirm the action worked.
 5. **Be thorough.** If the user says "summarize everything", read every relevant section. If they say "click the first result", use read_page_code to find it first.`;
 
-export const agent = createAgent({
-  model,
-  tools: browserTools,
-  systemPrompt: SYSTEM_PROMPT,
-})
+export function getAgent(config: ModelConfig) {
+  const model = new ChatOpenAI({
+    model: config.model,
+    apiKey: config.apiKey,
+    configuration: {
+      baseURL: config.baseURL
+    }
+  })
+
+  return createAgent({
+    model,
+    tools: browserTools,
+    systemPrompt: SYSTEM_PROMPT,
+  })
+}
