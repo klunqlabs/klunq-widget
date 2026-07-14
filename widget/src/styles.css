@@ -1,6 +1,20 @@
 @import "tailwindcss";
 
 @theme {
+  /* ── Typography & Layout ── */
+  --spacing-margin-desktop: 24px;
+  --spacing-panel-width: 380px;
+  --font-body-md: Inter, sans-serif;
+  --font-label-mono: "JetBrains Mono", monospace;
+  --text-body-md: 14px;
+  --z-60: 60;
+
+  /* ── Animations ── */
+  --animate-slide-up: slide-up 0.3s ease-out;
+  --animate-pulse-accent: pulse-accent 2s infinite ease-in-out;
+  --animate-spin-slow: spin-slow 8s linear infinite;
+
+  /* ── Color Palette (Light Mode Defaults) ── */
   --color-primary: #4CC1BC;
   --color-on-primary: #00363a;
   --color-primary-container: #dbfcff;
@@ -10,15 +24,187 @@
   --color-surface-container-high: #ebeef0;
   --color-surface-container-highest: #e5e8ea;
   --color-green-600: #16a34a;
-  --spacing-margin-desktop: 24px;
-  --spacing-panel-width: 380px;
-  --font-body-md: Inter, sans-serif;
-  --font-label-mono: "JetBrains Mono", monospace;
-  --text-body-md: 14px;
-  --z-60: 60;
-  --animate-slide-up: slide-up 0.3s ease-out;
+
+  /* Glass UI defaults */
+  --color-glass-bg: rgba(255, 255, 255, 0.7);
+  --color-glass-border: rgba(0, 0, 0, 0.08);
+  --color-glass-bubble-bg: rgba(0, 0, 0, 0.03);
+  --color-glass-bubble-border: rgba(0, 0, 0, 0.05);
+  --color-glass-logo-bg: rgba(255, 255, 255, 0.6);
+  --color-glass-textarea-bg: rgba(255, 255, 255, 0.8);
+  --color-glass-textarea-border: rgba(0, 0, 0, 0.1);
+  --color-glass-chip-bg: rgba(0, 0, 0, 0.05);
+  --color-glass-chip-hover: rgba(0, 0, 0, 0.1);
+  --color-glass-chip-border: rgba(0, 0, 0, 0.05);
+  --color-glass-panel-shadow: rgba(0, 0, 0, 0.05);
+  --color-glass-header-border: rgba(0, 0, 0, 0.05);
+  --color-glass-inner-glow: rgba(255, 255, 255, 0.6);
+
+  /* Aura & Orb defaults */
+  --color-aura-bg: rgba(255, 255, 255, 0.6);
+  --color-aura-border: rgba(0, 0, 0, 0.08);
+  --color-aura-shadow: rgba(0, 0, 0, 0.05);
+  --color-aura-hover-border: rgba(76, 193, 188, 0.2);
+  --color-aura-hover-shadow: rgba(0, 0, 0, 0.08);
+  --color-aura-hover-glow: rgba(76, 193, 188, 0.1);
+  --color-orb-bg: rgba(76, 193, 188, 0.3);
+  --color-orb-inner: #4CC1BC;
+  --color-orb-glow: rgba(76, 193, 188, 0.5);
+  --color-iris-scanner: rgba(76, 193, 188, 0.15);
+  --color-interaction-text: #4CC1BC;
+  --color-pulse-glow: rgba(76, 193, 188, 0.3);
+  --color-proactive-glow: rgba(76, 193, 188, 0.2);
+  --color-click-burst: rgba(76, 193, 188, 0.7);
+  --color-shadow-primary: rgba(76, 193, 188, 0.2);
+  --color-glow-primary-subtle: rgba(76, 193, 188, 0.05);
+  --color-glow-primary-hover: rgba(76, 193, 188, 0.1);
+  --color-chip-text: #444748;
+  --color-chip-text-hover: #1b1b1d;
+  --color-placeholder: rgba(68, 71, 72, 0.4);
+
+  /* Prose defaults */
+  --color-prose-code-bg: rgba(0, 0, 0, 0.06);
+  --color-prose-pre-bg: rgba(0, 0, 0, 0.04);
+  --color-prose-invert-code-bg: rgba(255, 255, 255, 0.15);
+  --color-prose-invert-pre-bg: rgba(255, 255, 255, 0.1);
 }
 
+/* ── Dark Theme (System Preference Override) ── */
+@media (prefers-color-scheme: dark) {
+  #clank-widget-root {
+    --color-primary: #8A2BE2;
+    --color-on-primary: #ffffff;
+    --color-primary-container: #2d1050;
+    --color-on-primary-container: #d9b0ff;
+    --color-on-surface: #ffffff;
+    --color-on-surface-variant: #c8c8d0;
+    --color-surface-container-high: #2a2a35;
+    --color-surface-container-highest: #333340;
+
+    --color-glass-bg: rgba(15, 12, 22, 0.78);
+    --color-glass-border: rgba(138, 43, 226, 0.12);
+    --color-glass-bubble-bg: rgba(138, 43, 226, 0.06);
+    --color-glass-bubble-border: rgba(138, 43, 226, 0.08);
+    --color-glass-logo-bg: rgba(15, 12, 22, 0.5);
+    --color-glass-textarea-bg: rgba(20, 18, 30, 0.75);
+    --color-glass-textarea-border: rgba(138, 43, 226, 0.15);
+    --color-glass-chip-bg: rgba(138, 43, 226, 0.08);
+    --color-glass-chip-hover: rgba(138, 43, 226, 0.15);
+    --color-glass-chip-border: rgba(138, 43, 226, 0.1);
+    --color-glass-panel-shadow: rgba(0, 0, 0, 0.25);
+    --color-glass-header-border: rgba(138, 43, 226, 0.1);
+    --color-glass-inner-glow: rgba(138, 43, 226, 0.15);
+
+    --color-aura-bg: rgba(15, 12, 22, 0.65);
+    --color-aura-border: rgba(138, 43, 226, 0.1);
+    --color-aura-shadow: rgba(0, 0, 0, 0.15);
+    --color-aura-hover-border: rgba(138, 43, 226, 0.25);
+    --color-aura-hover-shadow: rgba(0, 0, 0, 0.2);
+    --color-aura-hover-glow: rgba(138, 43, 226, 0.15);
+    --color-orb-bg: rgba(138, 43, 226, 0.3);
+    --color-orb-inner: #8A2BE2;
+    --color-orb-glow: rgba(138, 43, 226, 0.5);
+    --color-iris-scanner: rgba(138, 43, 226, 0.18);
+    --color-interaction-text: #C894FF;
+    --color-pulse-glow: rgba(138, 43, 226, 0.3);
+    --color-proactive-glow: rgba(138, 43, 226, 0.25);
+    --color-click-burst: rgba(138, 43, 226, 0.7);
+    --color-shadow-primary: rgba(138, 43, 226, 0.25);
+    --color-glow-primary-subtle: rgba(138, 43, 226, 0.08);
+    --color-glow-primary-hover: rgba(138, 43, 226, 0.15);
+    --color-chip-text: #c8c8d0;
+    --color-chip-text-hover: #ffffff;
+    --color-placeholder: rgba(200, 200, 208, 0.4);
+
+    --color-prose-code-bg: rgba(255, 255, 255, 0.08);
+    --color-prose-pre-bg: rgba(255, 255, 255, 0.05);
+    --color-prose-invert-code-bg: rgba(255, 255, 255, 0.12);
+    --color-prose-invert-pre-bg: rgba(255, 255, 255, 0.08);
+  }
+}
+
+/* ── Dark Theme (Manual Selector Toggle) ── */
+#clank-widget-root.dark {
+  --color-primary: #8A2BE2;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #2d1050;
+  --color-on-primary-container: #d9b0ff;
+  --color-on-surface: #ffffff;
+  --color-on-surface-variant: #c8c8d0;
+  --color-surface-container-high: #2a2a35;
+  --color-surface-container-highest: #333340;
+
+  --color-glass-bg: rgba(15, 12, 22, 0.78);
+  --color-glass-border: rgba(138, 43, 226, 0.12);
+  --color-glass-bubble-bg: rgba(138, 43, 226, 0.06);
+  --color-glass-bubble-border: rgba(138, 43, 226, 0.08);
+  --color-glass-logo-bg: rgba(15, 12, 22, 0.5);
+  --color-glass-textarea-bg: rgba(20, 18, 30, 0.75);
+  --color-glass-textarea-border: rgba(138, 43, 226, 0.15);
+  --color-glass-chip-bg: rgba(138, 43, 226, 0.08);
+  --color-glass-chip-hover: rgba(138, 43, 226, 0.15);
+  --color-glass-chip-border: rgba(138, 43, 226, 0.1);
+  --color-glass-panel-shadow: rgba(0, 0, 0, 0.25);
+  --color-glass-header-border: rgba(138, 43, 226, 0.1);
+  --color-glass-inner-glow: rgba(138, 43, 226, 0.15);
+
+  --color-aura-bg: rgba(15, 12, 22, 0.65);
+  --color-aura-border: rgba(138, 43, 226, 0.1);
+  --color-aura-shadow: rgba(0, 0, 0, 0.15);
+  --color-aura-hover-border: rgba(138, 43, 226, 0.25);
+  --color-aura-hover-shadow: rgba(0, 0, 0, 0.2);
+  --color-aura-hover-glow: rgba(138, 43, 226, 0.15);
+  --color-orb-bg: rgba(138, 43, 226, 0.3);
+  --color-orb-inner: #8A2BE2;
+  --color-orb-glow: rgba(138, 43, 226, 0.5);
+  --color-iris-scanner: rgba(138, 43, 226, 0.18);
+  --color-interaction-text: #C894FF;
+  --color-pulse-glow: rgba(138, 43, 226, 0.3);
+  --color-proactive-glow: rgba(138, 43, 226, 0.25);
+  --color-click-burst: rgba(138, 43, 226, 0.7);
+  --color-shadow-primary: rgba(138, 43, 226, 0.25);
+  --color-glow-primary-subtle: rgba(138, 43, 226, 0.08);
+  --color-glow-primary-hover: rgba(138, 43, 226, 0.15);
+  --color-chip-text: #c8c8d0;
+  --color-chip-text-hover: #ffffff;
+  --color-placeholder: rgba(200, 200, 208, 0.4);
+
+  --color-prose-code-bg: rgba(255, 255, 255, 0.08);
+  --color-prose-pre-bg: rgba(255, 255, 255, 0.05);
+  --color-prose-invert-code-bg: rgba(255, 255, 255, 0.12);
+  --color-prose-invert-pre-bg: rgba(255, 255, 255, 0.08);
+}
+
+/* ── Standard Utility Overrides (Maintains compatibility with legacy HTML classes) ── */
+.bg-black\/5 {
+  background-color: var(--color-glass-chip-bg);
+}
+
+.hover\:bg-black\/10:hover {
+  background-color: var(--color-glass-chip-hover);
+}
+
+.border-black\/5 {
+  border-color: var(--color-glass-chip-border);
+}
+
+.border-black\/10 {
+  border-color: var(--color-glass-textarea-border);
+}
+
+.shadow-black\/5 {
+  --tw-shadow-color: var(--color-glass-panel-shadow);
+}
+
+.bg-white\/60 {
+  background-color: var(--color-glass-logo-bg);
+}
+
+.bg-white\/80 {
+  background-color: var(--color-glass-textarea-bg);
+}
+
+/* ── CSS Keyframe Definitions ── */
 @keyframes slide-up {
   from {
     opacity: 0;
@@ -31,23 +217,6 @@
   }
 }
 
-.glass-panel {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.glass-bubble {
-  background: rgba(0, 0, 0, 0.03);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.animate-pulse-accent {
-  animation: pulse-accent 2s infinite ease-in-out;
-}
-
 @keyframes pulse-accent {
   0% {
     transform: scale(0.95);
@@ -57,21 +226,13 @@
   50% {
     transform: scale(1);
     opacity: 1;
-    box-shadow: 0 0 25px rgba(76, 193, 188, 0.3);
+    box-shadow: 0 0 25px var(--color-pulse-glow);
   }
 
   100% {
     transform: scale(0.95);
     opacity: 0.6;
   }
-}
-
-.inner-glow-top {
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
-}
-
-.custom-accent-border {
-  border-color: var(--color-primary);
 }
 
 @keyframes spin-slow {
@@ -82,70 +243,6 @@
   to {
     transform: rotate(360deg);
   }
-}
-
-.animate-spin-slow {
-  animation: spin-slow 8s linear infinite;
-}
-
-.aura-eye-container {
-  width: 80px;
-  height: 80px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 0.5px solid rgba(0, 0, 0, 0.08);
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-}
-
-.aura-eye-container:hover {
-  transform: scale(1.05);
-  border-color: rgba(76, 193, 188, 0.2);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08), 0 0 15px rgba(76, 193, 188, 0.1);
-}
-
-.aura-eye-container:active {
-  transform: scale(0.96);
-}
-
-.orb-outer {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(76, 193, 188, 0.3) 0%, rgba(76, 193, 188, 0) 70%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: pulse-glow 4s infinite ease-in-out;
-}
-
-.orb-inner {
-  width: 10px;
-  height: 10px;
-  background-color: #4CC1BC;
-  border-radius: 50%;
-  box-shadow: 0 0 12px #4CC1BC, 0 0 20px rgba(76, 193, 188, 0.5);
-  position: relative;
-  z-index: 10;
-}
-
-.orb-inner::after {
-  content: "";
-  position: absolute;
-  top: 1.5px;
-  left: 1.5px;
-  width: 2.5px;
-  height: 2.5px;
-  background: white;
-  border-radius: 50%;
-  opacity: 0.9;
 }
 
 @keyframes pulse-glow {
@@ -162,16 +259,6 @@
   }
 }
 
-.iris-scanner {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  border: 1px solid transparent;
-  border-top: 1px solid rgba(76, 193, 188, 0.15);
-  animation: rotate-scanner 6s linear infinite;
-}
-
 @keyframes rotate-scanner {
   from {
     transform: rotate(0deg);
@@ -180,6 +267,99 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* ── Custom Web Components & Complex Layouts ── */
+.glass-panel {
+  background: var(--color-glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--color-glass-border);
+}
+
+.glass-bubble {
+  background: var(--color-glass-bubble-bg);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--color-glass-bubble-border);
+  color: var(--color-on-surface);
+}
+
+.inner-glow-top {
+  box-shadow: inset 0 1px 0 0 var(--color-glass-inner-glow);
+}
+
+.custom-accent-border {
+  border-color: var(--color-primary);
+}
+
+.aura-eye-container {
+  width: 80px;
+  height: 80px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-aura-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 0.5px solid var(--color-aura-border);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px var(--color-aura-shadow);
+}
+
+.aura-eye-container:hover {
+  transform: scale(1.05);
+  border-color: var(--color-aura-hover-border);
+  box-shadow: 0 8px 30px var(--color-aura-hover-shadow), 0 0 15px var(--color-aura-hover-glow);
+}
+
+.aura-eye-container:active {
+  transform: scale(0.96);
+}
+
+.orb-outer {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--color-orb-bg) 0%, transparent 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse-glow 4s infinite ease-in-out;
+}
+
+.orb-inner {
+  width: 10px;
+  height: 10px;
+  background-color: var(--color-orb-inner);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--color-orb-inner), 0 0 20px var(--color-orb-glow);
+  position: relative;
+  z-index: 10;
+}
+
+.orb-inner::after {
+  content: "";
+  position: absolute;
+  top: 1.5px;
+  left: 1.5px;
+  width: 2.5px;
+  height: 2.5px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.9;
+}
+
+.iris-scanner {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  border-top: 1px solid var(--color-iris-scanner);
+  animation: rotate-scanner 6s linear infinite;
 }
 
 .interaction-text {
@@ -195,14 +375,13 @@
   line-height: 1;
   letter-spacing: 0.1em;
   font-weight: 600;
-  color: #4CC1BC;
+  color: var(--color-interaction-text);
   pointer-events: none;
 }
 
 .aura-eye-container:hover .interaction-text {
   opacity: 0.4;
   transform: translateY(0);
-
 }
 
 aside .orb-outer:hover .interaction-text {
@@ -211,45 +390,90 @@ aside .orb-outer:hover .interaction-text {
   bottom: -12px;
 }
 
-.prose p { margin-bottom: 0.5rem; line-height: 1.6; }
-.prose p:last-child { margin-bottom: 0; }
+/* ── Markdown Prose Component Styling ── */
+.prose p {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.prose p:last-child {
+  margin-bottom: 0;
+}
+
 .prose code {
-  background: rgba(0,0,0,0.06);
+  background: var(--color-prose-code-bg);
   padding: 0.125rem 0.375rem;
   border-radius: 4px;
   font-size: 0.85em;
   font-family: 'JetBrains Mono', monospace;
   word-break: break-word;
 }
+
 .prose pre {
-  background: rgba(0,0,0,0.04);
+  background: var(--color-prose-pre-bg);
   padding: 0.75rem;
   border-radius: 8px;
   overflow-x: auto;
   font-size: 0.85em;
   margin-bottom: 0.5rem;
 }
+
 .prose pre code {
   background: none;
   padding: 0;
   border-radius: 0;
 }
-.prose ul, .prose ol {
+
+.prose ul,
+.prose ol {
   padding-left: 1.25rem;
   margin-bottom: 0.5rem;
   line-height: 1.6;
 }
-.prose li { margin-bottom: 0.25rem; }
-.prose a { color: var(--color-primary); text-decoration: underline; }
-.prose strong { font-weight: 600; }
-.prose h1, .prose h2, .prose h3, .prose h4 {
+
+.prose li {
+  margin-bottom: 0.25rem;
+}
+
+.prose a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.prose strong {
+  font-weight: 600;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
   font-weight: 600;
   margin-bottom: 0.5rem;
   line-height: 1.3;
 }
-.prose h1 { font-size: 1.25rem; }
-.prose h2 { font-size: 1.1rem; }
-.prose h3 { font-size: 1rem; }
-.prose-invert code { background: rgba(255,255,255,0.15); }
-.prose-invert pre { background: rgba(255,255,255,0.1); }
-.prose-invert a { color: white; text-decoration: underline; }
+
+.prose h1 {
+  font-size: 1.25rem;
+}
+
+.prose h2 {
+  font-size: 1.1rem;
+}
+
+.prose h3 {
+  font-size: 1rem;
+}
+
+.prose-invert code {
+  background: var(--color-prose-invert-code-bg);
+}
+
+.prose-invert pre {
+  background: var(--color-prose-invert-pre-bg);
+}
+
+.prose-invert a {
+  color: white;
+  text-decoration: underline;
+}

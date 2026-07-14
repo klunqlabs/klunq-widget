@@ -33,7 +33,7 @@ export default function FloatingButton({ onClick }: FloatingButtonProps) {
     const proactive = setInterval(() => {
       if (Math.random() > 0.85) {
         container.style.boxShadow =
-          "0 8px 30px rgba(0, 0, 0, 0.08), 0 0 20px rgba(76, 193, 188, 0.2)";
+          "0 8px 30px rgba(0, 0, 0, 0.08), 0 0 20px var(--color-proactive-glow)";
         setTimeout(() => {
           container.style.boxShadow = "";
         }, 1200);
@@ -51,7 +51,7 @@ export default function FloatingButton({ onClick }: FloatingButtonProps) {
     const innerOrb = innerOrbRef.current;
     if (innerOrb) {
       innerOrb.style.boxShadow =
-        "0 0 30px #4CC1BC, 0 0 60px rgba(76, 193, 188, 0.7)";
+        "0 0 30px var(--color-primary), 0 0 60px var(--color-click-burst)";
       innerOrb.style.transform = "scale(1.2)";
       setTimeout(() => {
         innerOrb.style.boxShadow = "";

@@ -18,7 +18,13 @@ styleEl.textContent = styles;
 shadow.appendChild(styleEl);
 
 const root = document.createElement("div");
+root.id = "clank-widget-root";
 shadow.appendChild(root);
+
+const applyTheme = (isDark: boolean) => root.classList.toggle("dark", isDark);
+const media = window.matchMedia("(prefers-color-scheme: dark)");
+applyTheme(media.matches);
+media.addEventListener("change", (e) => applyTheme(e.matches));
 
 let modelConfig: ModelConfig;
 
