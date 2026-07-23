@@ -22,10 +22,10 @@ export default function FloatingButton({ onClick }: FloatingButtonProps) {
       const deltaX = e.clientX - centerX;
       const deltaY = e.clientY - centerY;
       const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-      const maxMove = 3.5;
+      const maxMove = 10;
       const moveX = (deltaX / (distance || 1)) * Math.min(distance / 60, maxMove);
       const moveY = (deltaY / (distance || 1)) * Math.min(distance / 60, maxMove);
-      if (!isNaN(moveX)) {
+      if (!isNaN(moveX) && !isNaN(moveY)) {
         innerOrb.style.transform = `translate(${moveX}px, ${moveY}px)`;
       }
     };
