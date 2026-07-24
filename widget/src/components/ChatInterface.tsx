@@ -63,7 +63,7 @@ export default function ChatInterface({ onClose }: ChatInterfaceProps) {
               <div class="iris-scanner" />
               <div class="orb-outer">
                 <div class="orb-inner" />
-                <div class="interaction-text">Ulvia</div>
+                <div class="interaction-text">Klunq</div>
               </div>
             </div>
           </div>

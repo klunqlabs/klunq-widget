@@ -71,7 +71,7 @@
 
 /* ── Dark Theme (System Preference Override) ── */
 @media (prefers-color-scheme: dark) {
-  #clank-widget-root {
+  #klunq-widget-root {
     --color-primary: #8A2BE2;
     --color-on-primary: #ffffff;
     --color-primary-container: #2d1050;
@@ -124,7 +124,7 @@
 }
 
 /* ── Dark Theme (Manual Selector Toggle) ── */
-#clank-widget-root.dark {
+#klunq-widget-root.dark {
   --color-primary: #8A2BE2;
   --color-on-primary: #ffffff;
   --color-primary-container: #2d1050;

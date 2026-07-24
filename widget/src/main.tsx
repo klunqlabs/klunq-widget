@@ -8,7 +8,7 @@ highlightStyle.textContent = `.tool-highlight { outline: 3px solid #f59e0b !impo
 document.head.appendChild(highlightStyle);
 
 const container = document.createElement("div");
-container.id = "clank-widget-container";
+container.id = "klunq-widget-container";
 document.body.appendChild(container);
 
 const shadow = container.attachShadow({ mode: "closed" });
@@ -18,7 +18,7 @@ styleEl.textContent = styles;
 shadow.appendChild(styleEl);
 
 const root = document.createElement("div");
-root.id = "clank-widget-root";
+root.id = "klunq-widget-root";
 shadow.appendChild(root);
 
 const applyTheme = (isDark: boolean) => root.classList.toggle("dark", isDark);

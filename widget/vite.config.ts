@@ -7,13 +7,13 @@ export default defineConfig({
   build: {
     lib: {
       entry: 'src/main.tsx',
-      name: 'ClankWidget',
+      name: 'KlunqWidget',
       formats: ['iife'],
-      fileName: () => 'clank-widget.js',
+      fileName: () => 'klunq-widget.js',
     },
     rollupOptions: {
       output: {
-        assetFileNames: 'clank-widget.[ext]',
+        assetFileNames: 'klunq-widget.[ext]',
       },
     },
   },
