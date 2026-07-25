@@ -19,13 +19,12 @@ proxy/              Server proxy (future — empty, only .gitkeep)
 | Command | Action |
 |---------|--------|
 | `npm run dev` | Start Vite dev server (serves `index.html` dev sandbox) |
-| `npm run build` | `tsc && vite build` — produces `dist/klunq-widget.js` (IIFE) + `dist/klunq-widget.css` |
+| `npm run build` | `tsc && vite build` — produces `dist/klunq-widget.js` (IIFE, CSS inlined) |
 | `npm run preview` | Preview production build locally |
 
 ## Embedding the widget (production)
 
 ```html
-<link rel="stylesheet" href="klunq-widget.css" />
 <script src="klunq-widget.js" data-model="<model>" data-api-key="<key>" data-base-url="<url>"></script>
 ```
 
@@ -45,7 +44,7 @@ In **development** (`index.html`), model config defaults to Ollama (`gemma4`, `l
 - Widget entry (`src/main.tsx`) creates `#klunq-widget-container`, attaches a **closed shadow DOM**, and renders Preact into `#klunq-widget-root` inside it.
 - Dark mode: detected via `matchMedia("(prefers-color-scheme: dark)")` and toggles `.dark` class on `#klunq-widget-root`. Both `@media (prefers-color-scheme: dark)` and `#klunq-widget-root.dark` selectors override CSS custom properties.
 - Built as IIFE via Vite library mode — all dependencies bundled into one JS file.
-- CSS is imported inline via `?inline` in dev (injected into shadow DOM as `<style>`); for production builds it extracts to `dist/klunq-widget.css` via Vite's `assetFileNames`.
+- CSS is imported inline via `?inline` (injected into shadow DOM as `<style>`), so no separate CSS file is emitted.
 - **LangChain is fully wired** to an LLM via `@langchain/openai`. The agent (`src/agent/agent.ts`) connects to any OpenAI-compatible API (defaults to local Ollama). Browser automation tools are registered: `read_page_code`, `read_page_content`, `click_element`, `follow_link`, `set_field_value`.
 - Markdown rendering uses **snarkdown** (~1KB) instead of `marked`.
 - Dark theme switches cyan (`#4CC1BC`) to neon purple (`#8A2BE2`), glass background to dark oil-fluid.

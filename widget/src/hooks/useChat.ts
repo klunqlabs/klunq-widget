@@ -1,6 +1,6 @@
 import { useContext, useRef } from "preact/hooks";
 import { getAgent } from "../agent/agent";
-import { AIMessage, HumanMessage } from "langchain";
+import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import { MessagesContext, ModelConfigContext } from "../App";
 
 export function useChat() {

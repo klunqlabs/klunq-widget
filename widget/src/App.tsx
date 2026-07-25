@@ -1,6 +1,7 @@
 import { createContext } from 'preact';
 import { Dispatch, StateUpdater, useState } from 'preact/hooks';
-import { AIMessage, BaseMessage } from 'langchain';
+import { AIMessage } from "@langchain/core/messages";
+import type { BaseMessage } from "@langchain/core/messages";
 
 import FloatingButton from './components/FloatingButton';
 import ChatInterface from './components/ChatInterface';

@@ -1,5 +1,5 @@
 import { ChatOpenAI } from "@langchain/openai";
-import { createAgent } from "langchain";
+import { SystemMessage, ToolMessage } from "@langchain/core/messages";
 import { browserTools } from "./tools";
 
 export interface ModelConfig {
@@ -33,11 +33,44 @@ export function getAgent(config: ModelConfig) {
     configuration: {
       baseURL: config.baseURL
     }
-  })
+  });
 
-  return createAgent({
-    model,
-    tools: browserTools,
-    systemPrompt: SYSTEM_PROMPT,
-  })
+  const modelWithTools = model.bindTools(browserTools);
+
+  return {
+    async invoke({ messages }: { messages: any[] }) {
+      const systemMsg = new SystemMessage(SYSTEM_PROMPT);
+      let currentMessages: any[] = [systemMsg, ...messages];
+
+      for (let i = 0; i < 25; i++) {
+        const response = await modelWithTools.invoke(currentMessages);
+        currentMessages.push(response);
+
+        const toolCalls = response?.tool_calls ?? [];
+        if (toolCalls.length === 0) break;
+
+        for (const tc of toolCalls) {
+          const tool = browserTools.find((t: any) => t.name === tc.name);
+          if (tool) {
+            const result = await (tool as any).invoke(tc.args);
+            currentMessages.push(
+              new ToolMessage({
+                content: typeof result === "string" ? result : JSON.stringify(result),
+                tool_call_id: tc.id as string,
+              })
+            );
+          } else {
+            currentMessages.push(
+              new ToolMessage({
+                content: `Error: unknown tool "${tc.name}"`,
+                tool_call_id: tc.id as string,
+              })
+            );
+          }
+        }
+      }
+
+      return { messages: currentMessages.slice(1) };
+    }
+  };
 }

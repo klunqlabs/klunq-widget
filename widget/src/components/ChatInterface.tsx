@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useContext } from "preact/hooks";
-import { AIMessage, HumanMessage } from "langchain";
+import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import snarkdown from 'snarkdown';
 import { useChat } from "../hooks/useChat";
 import { AppConfigContext } from "../App";
