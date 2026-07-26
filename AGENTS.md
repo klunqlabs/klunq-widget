@@ -3,18 +3,18 @@
 ## Project structure
 
 ```
-widget/             Client-side chat widget (Vite + Preact + TypeScript + Tailwind v4 + LangChain)
-  src/
-    agent/          Agent setup (agent.ts, tools.ts)
-    components/     Preact components (ChatInterface.tsx, FloatingButton.tsx)
-    hooks/          Custom hooks (useChat.ts)
-    App.tsx         Root component, context providers
-    main.tsx        Entry point — shadow DOM, dark mode detection, model config
-    styles.css      Tailwind v4 @theme + all component CSS
-proxy/              Server proxy (future — empty, only .gitkeep)
+src/
+  agent/          Agent setup (agent.ts, tools.ts)
+  components/     Preact components (ChatInterface.tsx, FloatingButton.tsx)
+  hooks/          Custom hooks (useChat.ts)
+  App.tsx         Root component, context providers
+  main.tsx        Entry point — shadow DOM, dark mode detection, model config
+  styles.css      Tailwind v4 @theme + all component CSS
+index.html        Dev sandbox (not production output)
+dist/             Production build output (klunq-widget.js)
 ```
 
-## Widget commands (`widget/`)
+## Commands
 
 | Command | Action |
 |---------|--------|
@@ -40,7 +40,7 @@ In **development** (`index.html`), model config defaults to Ollama (`gemma4`, `l
 
 ## Architecture notes
 
-- Two-package layout: client widget + server proxy (proxy not yet implemented).
+- Single-package layout: client widget only (server proxy moved to separate repo).
 - Widget entry (`src/main.tsx`) creates `#klunq-widget-container`, attaches a **closed shadow DOM**, and renders Preact into `#klunq-widget-root` inside it.
 - Dark mode: detected via `matchMedia("(prefers-color-scheme: dark)")` and toggles `.dark` class on `#klunq-widget-root`. Both `@media (prefers-color-scheme: dark)` and `#klunq-widget-root.dark` selectors override CSS custom properties.
 - Built as IIFE via Vite library mode — all dependencies bundled into one JS file.
