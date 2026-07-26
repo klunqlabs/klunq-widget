@@ -145,4 +145,4 @@ Tools highlight target elements with `.tool-highlight` (amber outline).
 
 ## License
 
-MIT
+[MIT](LICENSE) — If you use this software in a project, please include a link back to this repository.
