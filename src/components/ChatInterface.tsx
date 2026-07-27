@@ -156,7 +156,7 @@ export default function ChatInterface({ onClose }: ChatInterfaceProps) {
                 e.preventDefault();
                 if (loading) return;
                 await sendMessage("Summarize this page");
-              }} class="flex-1 px-3 py-2.5 text-xs font-bold bg-surface-container-high hover:bg-surface-container-highest text-on-surface rounded-md transition-colors cursor-pointer">
+              }} class="flex-1 px-3 py-2.5 text-xs font-bold bg-surface-container-high hover:bg-surface-container-highest text-on-surface rounded-md border border-primary/50 hover:border-primary/80 transition-colors cursor-pointer">
                 Summarize
               </button>
               <button
