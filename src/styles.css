@@ -390,6 +390,44 @@ aside .orb-outer:hover .interaction-text {
   bottom: -12px;
 }
 
+/* ── Mobile Responsive (max-width: 767px) ── */
+@media (max-width: 767px) {
+  #klunq-widget-root aside {
+    inset: 12px;
+    width: auto;
+    max-width: none;
+    min-width: 0;
+    border-radius: 12px;
+    max-height: none;
+  }
+
+  #klunq-widget-root textarea {
+    min-height: 80px;
+  }
+
+  #klunq-widget-root .aura-eye-container {
+    width: 56px;
+    height: 56px;
+  }
+
+  #klunq-widget-root .orb-outer {
+    width: 30px;
+    height: 30px;
+  }
+
+  #klunq-widget-root .orb-inner {
+    width: 8px;
+    height: 8px;
+  }
+
+  #klunq-widget-root .orb-inner::after {
+    top: 1px;
+    left: 1px;
+    width: 2px;
+    height: 2px;
+  }
+}
+
 /* ── Markdown Prose Component Styling ── */
 .prose p {
   margin-bottom: 0.5rem;

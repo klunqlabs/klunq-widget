@@ -62,7 +62,7 @@ export default function FloatingButton({ onClick }: FloatingButtonProps) {
   };
 
   return (
-    <div key={config.pos} class={`fixed bottom-15 z-60 ${config.pos === 'right' ? 'right-15' : 'left-15'}`}>
+    <div key={config.pos} class={`fixed bottom-15 max-md:bottom-4 z-60 ${config.pos === 'right' ? 'right-15 max-md:right-4' : 'left-15 max-md:left-4'}`}>
       <button
         ref={containerRef}
         class="aura-eye-container"
