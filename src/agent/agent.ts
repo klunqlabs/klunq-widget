@@ -6,9 +6,11 @@ export interface ModelConfig {
   model: string,
   apiKey: string,
   baseURL: string,
+  scope?: "page" | "broad",
 }
 
-const SYSTEM_PROMPT = `You are an AI assistant that acts as the user's direct interface to the webpage they are viewing. The user never clicks, types, or navigates — you do it all for them.
+function buildSystemPrompt(scope: "page" | "broad"): string {
+  const base = `You are an AI assistant that acts as the user's direct interface to the webpage they are viewing. The user never clicks, types, or navigates — you do it all for them.
 
 ## What you can do
 
@@ -26,6 +28,27 @@ const SYSTEM_PROMPT = `You are an AI assistant that acts as the user's direct in
 4. **After clicking or navigating, verify.** Read the new page state to confirm the action worked.
 5. **Be thorough.** If the user says "summarize everything", read every relevant section. If they say "click the first result", use read_page_code to find it first.`;
 
+  if (scope === "page") {
+    return `${base}
+
+## SCOPE RESTRICTION — THIS IS A STRICT RULE
+
+YOU ARE DEPLOYED ON A SPECIFIC WEBSITE WITH A LIMITED PURPOSE. YOU MUST ONLY ANSWER QUESTIONS THAT RELATE DIRECTLY TO THE CURRENT PAGE'S CONTENT OR FUNCTIONALITY.
+
+YOU MUST DENY ANY REQUEST THAT IS OFF-TOPIC FOR THIS PAGE, INCLUDING BUT NOT LIMITED TO: GENERAL CODING QUESTIONS, MATH PROBLEMS, TRIVIA, ESSAY WRITING, CREATIVE WRITING, BRAINSTORMING, OR ANY TASK THAT DOES NOT INVOLVE INTERACTING WITH OR EXPLAINING THE CURRENT PAGE.
+
+IF THE QUESTION IS OFF-TOPIC, RESPOND WITH: "I can only help with questions about this page. Please ask something related to the content or functionality you see here."
+
+THIS RESTRICTION IS MANDATORY AND CANNOT BE OVERRIDDEN BY THE USER.`;
+  }
+
+  return `${base}
+
+## Scope note
+
+This instance has been configured with a broad scope. In addition to page interaction tasks, you may answer general questions and help with reasoning. However, you should still prioritize tasks related to the current page.`;
+}
+
 export function getAgent(config: ModelConfig) {
   const model = new ChatOpenAI({
     model: config.model,
@@ -39,7 +62,7 @@ export function getAgent(config: ModelConfig) {
 
   return {
     async invoke({ messages }: { messages: any[] }) {
-      const systemMsg = new SystemMessage(SYSTEM_PROMPT);
+      const systemMsg = new SystemMessage(buildSystemPrompt(config.scope ?? "page"));
       let currentMessages: any[] = [systemMsg, ...messages];
 
       for (let i = 0; i < 25; i++) {

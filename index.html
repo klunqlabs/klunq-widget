@@ -328,13 +328,13 @@
     }
   </script>
 
-  <!-- Dev Script -->
+  <!-- Dev Script (data-scope is ignored in dev; defaults to "page") -->
   <script type="module" src="/src/main.tsx" data-model="gemma4" data-api-key="ollama"
     data-base-url="http://localhost:11434/v1"></script>
 
-  <!-- Prod Script -->
+  <!-- Prod Script (add data-scope="broad" to lift the page-only restriction) -->
   <!-- <script src="dist/klunq-widget.js" data-model="gemma4" data-api-key="ollama"
-    data-base-url="http://localhost:11434/v1"></script> -->
+    data-base-url="http://localhost:11434/v1" data-scope="broad"></script> -->
 
 </body>
 

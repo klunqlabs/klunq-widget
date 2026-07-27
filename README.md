@@ -46,6 +46,9 @@ Outputs `dist/klunq-widget.js` (IIFE, CSS inlined).
 - `data-api-key` — API key (or `ollama` for local)
 - `data-base-url` — OpenAI-compatible base URL
 
+**Optional attribute:**
+- `data-scope` — `"page"` (default) agent only answers questions about the current page; `"broad"` agent may also answer general questions
+
 The widget auto-injects a floating chat button into `document.body`.
 
 ## Project Structure
@@ -98,8 +101,16 @@ Pass via `<script>` attributes:
   data-model="gpt-4o"
   data-api-key="sk-..."
   data-base-url="https://api.openai.com/v1"
+  data-scope="broad"
 ></script>
 ```
+
+| Attribute | Required | Default | Description |
+|-----------|----------|---------|-------------|
+| `data-model` | yes | — | Model name |
+| `data-api-key` | yes | — | API key |
+| `data-base-url` | yes | — | API base URL |
+| `data-scope` | no | `"page"` | `"page"` — agent denies off-topic questions; `"broad"` — agent may answer general questions |
 
 ### Model Config (Development)
 
@@ -108,21 +119,8 @@ Defaults in `main.tsx`:
 model: "gemma4"
 apiKey: "ollama"
 baseURL: "http://localhost:11434/v1"
+scope: "page"   // hardcoded, data-* attributes not read in dev
 ```
-
-### Theming
-
-Override CSS custom properties on the host page:
-
-```css
-#klunq-widget-root {
-  --color-primary: #your-brand-color;
-  --color-surface: #your-surface;
-  --color-on-surface: #your-text;
-}
-```
-
-Dark mode overrides in `@media (prefers-color-scheme: dark)` in `styles.css`.
 
 ## Browser Tools
 

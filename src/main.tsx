@@ -32,7 +32,8 @@ if (import.meta.env.DEV) {
   modelConfig = {
     model: "gemma4",
     apiKey: "ollama",
-    baseURL: "http://localhost:11434/v1"
+    baseURL: "http://localhost:11434/v1",
+    scope: "page"
   }
 } else {
   const scriptEl = document.currentScript as HTMLScriptElement | null;
@@ -45,10 +46,13 @@ if (import.meta.env.DEV) {
     throw new Error('Missing mandatory attributes.');
   }
 
+  const scope = (scriptEl.dataset.scope === "broad") ? "broad" as const : "page" as const;
+
   modelConfig = {
     model: scriptEl.dataset.model,
     apiKey: scriptEl.dataset.apiKey,
-    baseURL: scriptEl.dataset.baseUrl
+    baseURL: scriptEl.dataset.baseUrl,
+    scope,
   }
 }
 

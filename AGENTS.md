@@ -28,10 +28,23 @@ dist/             Production build output (klunq-widget.js)
 <script src="klunq-widget.js" data-model="<model>" data-api-key="<key>" data-base-url="<url>"></script>
 ```
 
-The `<script>` tag requires `data-model`, `data-api-key`, and `data-base-url` attributes. Example:
+The `<script>` tag requires `data-model`, `data-api-key`, and `data-base-url` attributes. An optional `data-scope` attribute is also supported.
+
+| Attribute     | Required | Default  | Description |
+|---------------|----------|----------|-------------|
+| `data-model`  | yes      | —        | Model name |
+| `data-api-key`| yes      | —        | API key |
+| `data-base-url`| yes     | —        | API base URL |
+| `data-scope`  | no       | `"page"` | `"page"` — agent denies off-topic questions; `"broad"` — agent may answer general questions |
+
+Examples:
 
 ```html
+<!-- Strict mode (default): agent only answers page-related questions -->
 <script src="klunq-widget.js" data-model="gemma4" data-api-key="ollama" data-base-url="http://localhost:11434/v1"></script>
+
+<!-- Broad mode: agent may also answer general questions -->
+<script src="klunq-widget.js" data-model="gemma4" data-api-key="ollama" data-base-url="http://localhost:11434/v1" data-scope="broad"></script>
 ```
 
 The widget auto-injects a floating chat button into `document.body`.
@@ -46,6 +59,7 @@ In **development** (`index.html`), model config defaults to Ollama (`gemma4`, `l
 - Built as IIFE via Vite library mode — all dependencies bundled into one JS file.
 - CSS is imported inline via `?inline` (injected into shadow DOM as `<style>`), so no separate CSS file is emitted.
 - **LangChain is fully wired** to an LLM via `@langchain/openai`. The agent (`src/agent/agent.ts`) connects to any OpenAI-compatible API (defaults to local Ollama). Browser automation tools are registered: `read_page_code`, `read_page_content`, `click_element`, `follow_link`, `set_field_value`.
+- **Scope restriction**: By default (`data-scope="page"`), the system prompt contains an ALL-CAPS clause instructing the agent to deny off-topic questions. Setting `data-scope="broad"` replaces this with a permissive note. The scope is baked into the system prompt at initialization time.
 - Markdown rendering uses **snarkdown** (~1KB) instead of `marked`.
 - Dark theme switches cyan (`#4CC1BC`) to neon purple (`#8A2BE2`), glass background to dark oil-fluid.
 - Future: multi-provider LLM support, Chrome built-in Gemini Nano.
