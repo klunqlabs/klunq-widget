@@ -10,6 +10,7 @@ An embeddable AI chat widget built with **Preact**, **Tailwind CSS v4**, **LangC
 - **Dark mode** — Auto-detects `prefers-color-scheme`, themeable via CSS custom properties
 - **OpenAI-compatible** — Works with Ollama, OpenAI, and any OpenAI-compatible API
 - **Lightweight** — ~250KB gzipped (Preact + LangChain + tools)
+- **Connection monitoring** — Auto-detects API reachability with colored status indicator
 
 ## Quick Start
 
@@ -61,9 +62,11 @@ The widget auto-injects a floating chat button into `document.body`.
 │   │   └── tools.ts    # Browser automation tools (read, click, type, navigate)
 │   ├── components/     # Preact components
 │   │   ├── ChatInterface.tsx
-│   │   └── FloatingButton.tsx
+│   │   ├── FloatingButton.tsx
+│   │   └── StatusDot.tsx
 │   ├── hooks/          # Custom hooks
-│   │   └── useChat.ts  # Agent invocation, message state
+│   │   ├── useChat.ts           # Agent invocation, message state
+│   │   └── useConnectionStatus.ts # API health ping + connection state
 │   ├── App.tsx         # Root component, context providers
 │   ├── main.tsx        # Entry: Shadow DOM, dark mode, model config
 │   └── styles.css      # Tailwind v4 @theme + component styles
@@ -88,6 +91,7 @@ The widget auto-injects a floating chat button into `document.body`.
 - **Agent** (`agent/agent.ts`) uses `@langchain/openai` with bound browser tools (`read_page_content`, `read_page_code`, `click_element`, `follow_link`, `set_field_value`). Runs a 25-step ReAct loop.
 - **Tools** (`agent/tools.ts`) execute in host page context via `window` — can read/click/type/navigate any element.
 - **Styling** — Tailwind v4 via `@tailwindcss/vite`. All colors use CSS custom properties (`--color-*`) defined in `@theme`. Dark overrides via `@media (prefers-color-scheme: dark)` and `.dark` class on shadow root.
+- **Connection monitoring** — On mount, the widget sends a "Ping" system message to the API via `pingModel()`. Pings repeat every 30s. A colored dot next to the Klunq logo reflects the current state: green (online), orange (no API key), red (error), amber (checking). Hovering the dot shows a tooltip with details. When the API is unreachable or no key is provided, all send controls are disabled.
 
 ## Configuration
 
@@ -121,6 +125,19 @@ apiKey: "ollama"
 baseURL: "http://localhost:11434/v1"
 scope: "page"   // hardcoded, data-* attributes not read in dev
 ```
+
+### Connection Status
+
+The widget monitors API reachability via periodic pings and displays the result as a colored dot next to the Klunq logo.
+
+| Status | Dot Color | Tooltip | Sending Enabled |
+|--------|-----------|---------|-----------------|
+| `checking` | Amber | "Reaching provider..." | No (until resolved) |
+| `online` | Green | "Online" | Yes |
+| `no_key` | Orange | "No API key. Try logging in to get one." | No |
+| `error` | Red | HTTP status + error message | No |
+
+The first ping runs on mount. Subsequent pings run every 30 seconds. On `error`, the tooltip displays the actual error (e.g. `401 Unauthorized`, `429 Too Many Requests`, `503 Service Unavailable`). Pings use a 20-second timeout and `maxTokens: 5` to minimize cost.
 
 ## Browser Tools
 

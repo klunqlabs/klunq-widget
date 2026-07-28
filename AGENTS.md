@@ -20,7 +20,6 @@ dist/             Production build output (klunq-widget.js)
 |---------|--------|
 | `npm run dev` | Start Vite dev server (serves `index.html` dev sandbox) |
 | `npm run build` | `tsc && vite build` — produces `dist/klunq-widget.js` (IIFE, CSS inlined) |
-| `npm run preview` | Preview production build locally |
 
 ## Embedding the widget (production)
 

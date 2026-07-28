@@ -2,7 +2,8 @@ import { useState, useRef, useEffect, useContext } from "preact/hooks";
 import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import snarkdown from 'snarkdown';
 import { useChat } from "../hooks/useChat";
-import { AppConfigContext } from "../App";
+import { AppConfigContext, ConnectionStatusContext } from "../App";
+import StatusDot from "./StatusDot";
 
 interface ChatInterfaceProps {
   onClose: () => void;
@@ -10,7 +11,9 @@ interface ChatInterfaceProps {
 
 export default function ChatInterface({ onClose }: ChatInterfaceProps) {
   const config = useContext(AppConfigContext)
+  const conn = useContext(ConnectionStatusContext);
   const { messages, clearMessages, loading, sendMessage } = useChat();
+  const canSend = conn.status === 'online' && !loading;
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -33,19 +36,20 @@ export default function ChatInterface({ onClose }: ChatInterfaceProps) {
 
   const handleSend = async () => {
     const text = input.trim();
-    if (!text || loading) return;
+    if (!text || !canSend) return;
     setInput("");
     await sendMessage(text);
   };
 
   const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey && canSend) {
       e.preventDefault();
       handleSend();
     }
   };
 
   const handleTips = (text: string) => () => {
+    if (!canSend) return;
     sendMessage(text);
   }
 
@@ -66,6 +70,7 @@ export default function ChatInterface({ onClose }: ChatInterfaceProps) {
                 <div class="interaction-text">Klunq</div>
               </div>
             </div>
+            <StatusDot status={conn.status} errorMessage={conn.errorMessage} />
           </div>
 
           <div class="flex items-center gap-2">
@@ -120,16 +125,16 @@ export default function ChatInterface({ onClose }: ChatInterfaceProps) {
 
       <div class="p-6 pt-0 shrink-0">
         {messages.length === 1 && (<div class="flex flex-wrap gap-2 mb-3">
-          <button onClick={handleTips('click to next section')} class="px-3 py-1.5 rounded-lg border border-black/5 bg-black/5 hover:bg-black/10 text-on-surface-variant hover:text-on-surface text-[11px] font-label-mono uppercase tracking-wider transition-all cursor-pointer active:scale-95">
+          <button onClick={handleTips('click to next section')} disabled={!canSend} class="px-3 py-1.5 rounded-lg border border-black/5 bg-black/5 hover:bg-black/10 text-on-surface-variant hover:text-on-surface text-[11px] font-label-mono uppercase tracking-wider transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed active:scale-95">
             click to next section
           </button>
-          <button onClick={handleTips('extract data table')} class="px-3 py-1.5 rounded-lg border border-black/5 bg-black/5 hover:bg-black/10 text-on-surface-variant hover:text-on-surface text-[11px] font-label-mono uppercase tracking-wider transition-all cursor-pointer active:scale-95">
+          <button onClick={handleTips('extract data table')} disabled={!canSend} class="px-3 py-1.5 rounded-lg border border-black/5 bg-black/5 hover:bg-black/10 text-on-surface-variant hover:text-on-surface text-[11px] font-label-mono uppercase tracking-wider transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed active:scale-95">
             extract data table
           </button>
-          <button onClick={handleTips('find actions')} class="px-3 py-1.5 rounded-lg border border-black/5 bg-black/5 hover:bg-black/10 text-on-surface-variant hover:text-on-surface text-[11px] font-label-mono uppercase tracking-wider transition-all cursor-pointer active:scale-95">
+          <button onClick={handleTips('find actions')} disabled={!canSend} class="px-3 py-1.5 rounded-lg border border-black/5 bg-black/5 hover:bg-black/10 text-on-surface-variant hover:text-on-surface text-[11px] font-label-mono uppercase tracking-wider transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed active:scale-95">
             find actions
           </button>
-          <button onClick={handleTips('scrape form fields')} class="px-3 py-1.5 rounded-lg border border-black/5 bg-black/5 hover:bg-black/10 text-on-surface-variant hover:text-on-surface text-[11px] font-label-mono uppercase tracking-wider transition-all cursor-pointer active:scale-95">
+          <button onClick={handleTips('scrape form fields')} disabled={!canSend} class="px-3 py-1.5 rounded-lg border border-black/5 bg-black/5 hover:bg-black/10 text-on-surface-variant hover:text-on-surface text-[11px] font-label-mono uppercase tracking-wider transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed active:scale-95">
             scrape form fields
           </button>
         </div>)}
@@ -154,14 +159,16 @@ export default function ChatInterface({ onClose }: ChatInterfaceProps) {
             <div class="flex flex-1 gap-2 w-full">
               <button onClick={async (e) => {
                 e.preventDefault();
-                if (loading) return;
+                if (!canSend) return;
                 await sendMessage("Summarize this page");
-              }} class="flex-1 px-3 py-2.5 text-xs font-bold bg-surface-container-high hover:bg-surface-container-highest text-on-surface rounded-md border border-primary/50 hover:border-primary/80 transition-colors cursor-pointer">
+              }} class="flex-1 px-3 py-2.5 text-xs font-bold bg-surface-container-high hover:bg-surface-container-highest text-on-surface rounded-md border border-primary/50 hover:border-primary/80 transition-colors disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+                disabled={!canSend}>
                 Summarize
               </button>
               <button
                 onClick={handleSend}
-                class="flex-1 px-3 py-2.5 text-xs font-bold bg-primary text-on-primary rounded-md shadow-lg shadow-primary/20 hover:brightness-110 active:scale-95 transition-all cursor-pointer"
+                disabled={!canSend}
+                class="flex-1 px-3 py-2.5 text-xs font-bold bg-primary text-on-primary rounded-md shadow-lg shadow-primary/20 hover:brightness-110 active:scale-95 transition-all disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
               >
                 Execute
               </button>

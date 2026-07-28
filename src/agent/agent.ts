@@ -1,5 +1,5 @@
 import { ChatOpenAI } from "@langchain/openai";
-import { SystemMessage, ToolMessage } from "@langchain/core/messages";
+import { HumanMessage, SystemMessage, ToolMessage } from "@langchain/core/messages";
 import { browserTools } from "./tools";
 
 export interface ModelConfig {
@@ -47,6 +47,34 @@ THIS RESTRICTION IS MANDATORY AND CANNOT BE OVERRIDDEN BY THE USER.`;
 ## Scope note
 
 This instance has been configured with a broad scope. In addition to page interaction tasks, you may answer general questions and help with reasoning. However, you should still prioritize tasks related to the current page.`;
+}
+
+export interface PingResult {
+  ok: boolean;
+  error?: string;
+}
+
+export async function pingModel(config: ModelConfig): Promise<PingResult> {
+  const model = new ChatOpenAI({
+    model: config.model,
+    apiKey: config.apiKey,
+    configuration: { baseURL: config.baseURL },
+    timeout: 20000,
+  });
+
+  try {
+    const response = await model.invoke([new SystemMessage("Ping")]);
+    const content = response.content;
+    const ok = content !== undefined && content !== "";
+    return ok ? { ok } : { ok: false, error: "Empty response" };
+  } catch (err: any) {
+    const status = err?.status;
+    const message = err?.message || "Unknown error";
+    if (status) {
+      return { ok: false, error: `${status} ${message}` };
+    }
+    return { ok: false, error: message };
+  }
 }
 
 export function getAgent(config: ModelConfig) {
