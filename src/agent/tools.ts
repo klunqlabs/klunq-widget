@@ -145,7 +145,7 @@ export const browserTools = [
       if (!href) return `The link "${query}" has no href attribute.`;
       highlight(a);
       logAction(`Followed link matching "${query}" → ${href}`);
-      window.location.href = href;
+      window.open(href, "_blank", "noopener, noreferrer");
       return `Navigated to: ${href}`;
     },
     {
