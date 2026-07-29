@@ -5,8 +5,8 @@ import { z } from "zod";
 
 function highlight(el: Element | null): void {
   if (!el) return;
-  el.classList.add("tool-highlight");
-  setTimeout(() => el.classList.remove("tool-highlight"), 3000);
+  el.classList.add("klunq-tool-highlight");
+  setTimeout(() => el.classList.remove("klunq-tool-highlight"), 3000);
 }
 
 function logAction(msg: string): void {

@@ -151,7 +151,7 @@ The agent has access to:
 | `follow_link` | Navigate to a link URL |
 | `set_field_value` | Type into input/textarea/select |
 
-Tools highlight target elements with `.tool-highlight` (amber outline).
+Tools highlight target elements with `.klunq-tool-highlight` (amber outline).
 
 ## Requirements
 
