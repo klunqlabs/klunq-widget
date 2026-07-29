@@ -129,55 +129,55 @@
 
 /* ── Dark Theme (Manual Selector Toggle) ── */
 #klunq-widget-root.dark {
-    --color-primary: #4CC1BC;
-    --color-on-primary: #00363a;
-    --color-primary-container: #0a3d3b;
-    --color-on-primary-container: #88e3de;
-    --color-on-surface: #ffffff;
-    --color-on-surface-variant: #c8c8d0;
-    --color-surface-container-high: #2a2a35;
-    --color-surface-container-highest: #333340;
+  --color-primary: #4CC1BC;
+  --color-on-primary: #00363a;
+  --color-primary-container: #0a3d3b;
+  --color-on-primary-container: #88e3de;
+  --color-on-surface: #ffffff;
+  --color-on-surface-variant: #c8c8d0;
+  --color-surface-container-high: #2a2a35;
+  --color-surface-container-highest: #333340;
 
-    --color-glass-bg: rgba(28, 26, 40, 0.85);
-    --color-glass-border: rgba(76, 193, 188, 0.18);
-    --color-glass-bubble-bg: rgba(76, 193, 188, 0.22);
-    --color-glass-bubble-border: rgba(76, 193, 188, 0.35);
-    --color-glass-logo-bg: rgba(28, 26, 40, 0.6);
-    --color-glass-textarea-bg: rgba(22, 20, 34, 0.8);
-    --color-glass-textarea-border: rgba(76, 193, 188, 0.45);
-    --color-glass-chip-bg: rgba(76, 193, 188, 0.1);
-    --color-glass-chip-hover: rgba(76, 193, 188, 0.18);
-    --color-glass-chip-border: rgba(76, 193, 188, 0.12);
-    --color-glass-panel-shadow: rgba(0, 0, 0, 0.35);
-    --color-glass-header-border: rgba(76, 193, 188, 0.12);
-    --color-glass-inner-glow: rgba(76, 193, 188, 0.12);
+  --color-glass-bg: rgba(28, 26, 40, 0.85);
+  --color-glass-border: rgba(76, 193, 188, 0.18);
+  --color-glass-bubble-bg: rgba(76, 193, 188, 0.22);
+  --color-glass-bubble-border: rgba(76, 193, 188, 0.35);
+  --color-glass-logo-bg: rgba(28, 26, 40, 0.6);
+  --color-glass-textarea-bg: rgba(22, 20, 34, 0.8);
+  --color-glass-textarea-border: rgba(76, 193, 188, 0.45);
+  --color-glass-chip-bg: rgba(76, 193, 188, 0.1);
+  --color-glass-chip-hover: rgba(76, 193, 188, 0.18);
+  --color-glass-chip-border: rgba(76, 193, 188, 0.12);
+  --color-glass-panel-shadow: rgba(0, 0, 0, 0.35);
+  --color-glass-header-border: rgba(76, 193, 188, 0.12);
+  --color-glass-inner-glow: rgba(76, 193, 188, 0.12);
 
-    --color-aura-bg: rgba(6, 48, 46, 0.92);
-    --color-aura-border: rgba(76, 193, 188, 0.55);
-    --color-aura-shadow: rgba(0, 0, 0, 0.4);
-    --color-aura-hover-border: rgba(76, 193, 188, 0.65);
-    --color-aura-hover-shadow: rgba(0, 0, 0, 0.35);
-    --color-aura-hover-glow: rgba(76, 193, 188, 0.35);
-    --color-orb-bg: rgba(76, 193, 188, 0.45);
-    --color-orb-inner: #4CC1BC;
-    --color-orb-glow: rgba(76, 193, 188, 0.85);
-    --color-iris-scanner: rgba(76, 193, 188, 0.7);
-    --color-interaction-text: #4CC1BC;
-    --color-pulse-glow: rgba(76, 193, 188, 0.3);
-    --color-proactive-glow: rgba(76, 193, 188, 0.25);
-    --color-click-burst: rgba(76, 193, 188, 0.7);
-    --color-shadow-primary: rgba(76, 193, 188, 0.25);
-    --color-glow-primary-subtle: rgba(76, 193, 188, 0.08);
-    --color-glow-primary-hover: rgba(76, 193, 188, 0.15);
-    --color-chip-text: #c8c8d0;
-    --color-chip-text-hover: #ffffff;
-    --color-placeholder: rgba(200, 200, 208, 0.4);
+  --color-aura-bg: rgba(6, 48, 46, 0.92);
+  --color-aura-border: rgba(76, 193, 188, 0.55);
+  --color-aura-shadow: rgba(0, 0, 0, 0.4);
+  --color-aura-hover-border: rgba(76, 193, 188, 0.65);
+  --color-aura-hover-shadow: rgba(0, 0, 0, 0.35);
+  --color-aura-hover-glow: rgba(76, 193, 188, 0.35);
+  --color-orb-bg: rgba(76, 193, 188, 0.45);
+  --color-orb-inner: #4CC1BC;
+  --color-orb-glow: rgba(76, 193, 188, 0.85);
+  --color-iris-scanner: rgba(76, 193, 188, 0.7);
+  --color-interaction-text: #4CC1BC;
+  --color-pulse-glow: rgba(76, 193, 188, 0.3);
+  --color-proactive-glow: rgba(76, 193, 188, 0.25);
+  --color-click-burst: rgba(76, 193, 188, 0.7);
+  --color-shadow-primary: rgba(76, 193, 188, 0.25);
+  --color-glow-primary-subtle: rgba(76, 193, 188, 0.08);
+  --color-glow-primary-hover: rgba(76, 193, 188, 0.15);
+  --color-chip-text: #c8c8d0;
+  --color-chip-text-hover: #ffffff;
+  --color-placeholder: rgba(200, 200, 208, 0.4);
 
-    --color-prose-code-bg: rgba(255, 255, 255, 0.08);
-    --color-prose-pre-bg: rgba(255, 255, 255, 0.05);
-    --color-prose-invert-code-bg: rgba(255, 255, 255, 0.12);
-    --color-prose-invert-pre-bg: rgba(255, 255, 255, 0.08);
-  }
+  --color-prose-code-bg: rgba(255, 255, 255, 0.08);
+  --color-prose-pre-bg: rgba(255, 255, 255, 0.05);
+  --color-prose-invert-code-bg: rgba(255, 255, 255, 0.12);
+  --color-prose-invert-pre-bg: rgba(255, 255, 255, 0.08);
+}
 
 /* ── Standard Utility Overrides (Maintains compatibility with legacy HTML classes) ── */
 .bg-black\/5 {
@@ -398,12 +398,15 @@ aside .orb-outer:hover .interaction-text {
 .klunq-status-online {
   background-color: var(--color-status-online);
 }
+
 .klunq-status-no-key {
   background-color: var(--color-status-no-key);
 }
+
 .klunq-status-error {
   background-color: var(--color-status-error);
 }
+
 .klunq-status-checking {
   background-color: var(--color-status-checking);
 }
