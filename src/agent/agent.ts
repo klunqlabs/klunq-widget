@@ -83,7 +83,8 @@ export function getAgent(config: ModelConfig) {
     apiKey: config.apiKey,
     configuration: {
       baseURL: config.baseURL
-    }
+    },
+    timeout: 120000,
   });
 
   const modelWithTools = model.bindTools(browserTools);
