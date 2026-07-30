@@ -12,7 +12,8 @@
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepare": "husky"
   },
   "dependencies": {
     "@langchain/core": "^1.1.48",
@@ -22,14 +23,27 @@
     "snarkdown": "^2.0.0",
     "tailwindcss": "^4.3.1"
   },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,json,md}": [
+      "prettier --write"
+    ]
+  },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0",
     "@eslint/js": "^10.0.1",
     "@preact/preset-vite": "^2.9.0",
     "@testing-library/jest-dom": "^7.0.0",
     "@testing-library/preact": "^3.2.4",
     "eslint": "^10.8.0",
     "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
     "jsdom": "^29.1.1",
+    "lint-staged": "^17.2.0",
     "prettier": "^3.9.6",
     "typescript": "^5.6.0",
     "typescript-eslint": "^8.65.0",
