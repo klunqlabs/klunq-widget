@@ -7,7 +7,7 @@ export function useChat() {
   const modelConfigContext = useContext(ModelConfigContext);
 
   if (modelConfigContext === undefined) {
-    throw new Error('useChat must be used within a ModelConfigContext.Provider');
+    throw new Error("useChat must be used within a ModelConfigContext.Provider");
   }
 
   const agent = useRef(getAgent(modelConfigContext));
@@ -15,14 +15,14 @@ export function useChat() {
   const messageContext = useContext(MessagesContext);
 
   if (messageContext === undefined) {
-    throw new Error('useChat must be used within a MessagesContext.Provider');
+    throw new Error("useChat must be used within a MessagesContext.Provider");
   }
 
   const { messages, setMessages, loading, setLoading } = messageContext;
 
   const sendMessage = async (text: string) => {
     const userMsg = new HumanMessage(text);
-    const updatedMessages = [...messages, userMsg]
+    const updatedMessages = [...messages, userMsg];
 
     setMessages(updatedMessages);
     setLoading(true);
@@ -31,7 +31,7 @@ export function useChat() {
       const reply = await agent.current.invoke({ messages: updatedMessages });
       setMessages((_) => reply.messages);
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : 'Unknown error';
+      const errorMsg = err instanceof Error ? err.message : "Unknown error";
       setMessages((prev) => [...prev, new AIMessage(`Error: ${errorMsg}`)]);
     } finally {
       setLoading(false);
@@ -40,7 +40,7 @@ export function useChat() {
 
   const clearMessages = () => {
     setMessages(messages.slice(0, 1));
-  }
+  };
 
   return { messages, clearMessages, loading, sendMessage };
 }

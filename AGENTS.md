@@ -16,34 +16,50 @@ dist/             Production build output (klunq-widget.js)
 
 ## Commands
 
-| Command | Action |
-|---------|--------|
-| `npm run dev` | Start Vite dev server (serves `index.html` dev sandbox) |
+| Command         | Action                                                                    |
+| --------------- | ------------------------------------------------------------------------- |
+| `npm run dev`   | Start Vite dev server (serves `index.html` dev sandbox)                   |
 | `npm run build` | `tsc && vite build` — produces `dist/klunq-widget.js` (IIFE, CSS inlined) |
 
 ## Embedding the widget (production)
 
 ```html
-<script src="klunq-widget.js" data-model="<model>" data-api-key="<key>" data-base-url="<url>"></script>
+<script
+  src="klunq-widget.js"
+  data-model="<model>"
+  data-api-key="<key>"
+  data-base-url="<url>"
+></script>
 ```
 
 The `<script>` tag requires `data-model`, `data-api-key`, and `data-base-url` attributes. An optional `data-scope` attribute is also supported.
 
-| Attribute     | Required | Default  | Description |
-|---------------|----------|----------|-------------|
-| `data-model`  | yes      | —        | Model name |
-| `data-api-key`| yes      | —        | API key |
-| `data-base-url`| yes     | —        | API base URL |
-| `data-scope`  | no       | `"page"` | `"page"` — agent denies off-topic questions; `"broad"` — agent may answer general questions |
+| Attribute       | Required | Default  | Description                                                                                 |
+| --------------- | -------- | -------- | ------------------------------------------------------------------------------------------- |
+| `data-model`    | yes      | —        | Model name                                                                                  |
+| `data-api-key`  | yes      | —        | API key                                                                                     |
+| `data-base-url` | yes      | —        | API base URL                                                                                |
+| `data-scope`    | no       | `"page"` | `"page"` — agent denies off-topic questions; `"broad"` — agent may answer general questions |
 
 Examples:
 
 ```html
 <!-- Strict mode (default): agent only answers page-related questions -->
-<script src="klunq-widget.js" data-model="gemma4" data-api-key="ollama" data-base-url="http://localhost:11434/v1"></script>
+<script
+  src="klunq-widget.js"
+  data-model="gemma4"
+  data-api-key="ollama"
+  data-base-url="http://localhost:11434/v1"
+></script>
 
 <!-- Broad mode: agent may also answer general questions -->
-<script src="klunq-widget.js" data-model="gemma4" data-api-key="ollama" data-base-url="http://localhost:11434/v1" data-scope="broad"></script>
+<script
+  src="klunq-widget.js"
+  data-model="gemma4"
+  data-api-key="ollama"
+  data-base-url="http://localhost:11434/v1"
+  data-scope="broad"
+></script>
 ```
 
 The widget auto-injects a floating chat button into `document.body`.

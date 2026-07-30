@@ -43,11 +43,13 @@ Outputs `dist/klunq-widget.js` (IIFE, CSS inlined).
 ```
 
 **Required attributes:**
+
 - `data-model` — Model name (e.g., `gemma4`, `gpt-4o`)
 - `data-api-key` — API key (or `ollama` for local)
 - `data-base-url` — OpenAI-compatible base URL
 
 **Optional attribute:**
+
 - `data-scope` — `"page"` (default) agent only answers questions about the current page; `"broad"` agent may also answer general questions
 
 The widget auto-injects a floating chat button into `document.body`.
@@ -80,9 +82,9 @@ The widget auto-injects a floating chat button into `document.body`.
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start Vite dev server |
+| Command         | Description                   |
+| --------------- | ----------------------------- |
+| `npm run dev`   | Start Vite dev server         |
 | `npm run build` | Type-check + production build |
 
 ## Architecture
@@ -109,33 +111,34 @@ Pass via `<script>` attributes:
 ></script>
 ```
 
-| Attribute | Required | Default | Description |
-|-----------|----------|---------|-------------|
-| `data-model` | yes | — | Model name |
-| `data-api-key` | yes | — | API key |
-| `data-base-url` | yes | — | API base URL |
-| `data-scope` | no | `"page"` | `"page"` — agent denies off-topic questions; `"broad"` — agent may answer general questions |
+| Attribute       | Required | Default  | Description                                                                                 |
+| --------------- | -------- | -------- | ------------------------------------------------------------------------------------------- |
+| `data-model`    | yes      | —        | Model name                                                                                  |
+| `data-api-key`  | yes      | —        | API key                                                                                     |
+| `data-base-url` | yes      | —        | API base URL                                                                                |
+| `data-scope`    | no       | `"page"` | `"page"` — agent denies off-topic questions; `"broad"` — agent may answer general questions |
 
 ### Model Config (Development)
 
 Defaults in `main.tsx`:
+
 ```ts
-model: "gemma4"
-apiKey: "ollama"
-baseURL: "http://localhost:11434/v1"
-scope: "page"   // hardcoded, data-* attributes not read in dev
+model: "gemma4";
+apiKey: "ollama";
+baseURL: "http://localhost:11434/v1";
+scope: "page"; // hardcoded, data-* attributes not read in dev
 ```
 
 ### Connection Status
 
 The widget monitors API reachability via periodic pings and displays the result as a colored dot next to the Klunq logo.
 
-| Status | Dot Color | Tooltip | Sending Enabled |
-|--------|-----------|---------|-----------------|
-| `checking` | Amber | "Reaching provider..." | No (until resolved) |
-| `online` | Green | "Online" | Yes |
-| `no_key` | Orange | "No API key. Try logging in to get one." | No |
-| `error` | Red | HTTP status + error message | No |
+| Status     | Dot Color | Tooltip                                  | Sending Enabled     |
+| ---------- | --------- | ---------------------------------------- | ------------------- |
+| `checking` | Amber     | "Reaching provider..."                   | No (until resolved) |
+| `online`   | Green     | "Online"                                 | Yes                 |
+| `no_key`   | Orange    | "No API key. Try logging in to get one." | No                  |
+| `error`    | Red       | HTTP status + error message              | No                  |
 
 The first ping runs on mount. Subsequent pings run every 30 seconds. On `error`, the tooltip displays the actual error (e.g. `401 Unauthorized`, `429 Too Many Requests`, `503 Service Unavailable`). Pings use a 20-second timeout and `maxTokens: 5` to minimize cost.
 
@@ -143,13 +146,13 @@ The first ping runs on mount. Subsequent pings run every 30 seconds. On `error`,
 
 The agent has access to:
 
-| Tool | Description |
-|------|-------------|
-| `read_page_content` | Extract visible text from page |
-| `read_page_code` | Get outerHTML of element (by selector) |
-| `click_element` | Click any clickable element |
-| `follow_link` | Navigate to a link URL |
-| `set_field_value` | Type into input/textarea/select |
+| Tool                | Description                            |
+| ------------------- | -------------------------------------- |
+| `read_page_content` | Extract visible text from page         |
+| `read_page_code`    | Get outerHTML of element (by selector) |
+| `click_element`     | Click any clickable element            |
+| `follow_link`       | Navigate to a link URL                 |
+| `set_field_value`   | Type into input/textarea/select        |
 
 Tools highlight target elements with `.klunq-tool-highlight` (amber outline).
 

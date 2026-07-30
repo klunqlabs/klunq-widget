@@ -1,7 +1,7 @@
 import { useState, useEffect } from "preact/hooks";
 import { pingModel, ModelConfig } from "../agent/agent";
 
-export type ConnectionStatus = 'checking' | 'online' | 'no_key' | 'error';
+export type ConnectionStatus = "checking" | "online" | "no_key" | "error";
 
 export interface ConnectionInfo {
   status: ConnectionStatus;
@@ -11,8 +11,8 @@ export interface ConnectionInfo {
 
 export function useConnectionStatus(config: ModelConfig): ConnectionInfo {
   const [info, setInfo] = useState<ConnectionInfo>({
-    status: 'checking',
-    errorMessage: '',
+    status: "checking",
+    errorMessage: "",
     lastPingAt: null,
   });
 
@@ -23,30 +23,30 @@ export function useConnectionStatus(config: ModelConfig): ConnectionInfo {
     const thisConfig = { model, apiKey, baseURL };
 
     const check = async () => {
-      if (!thisConfig.apiKey || thisConfig.apiKey.trim() === '') {
+      if (!thisConfig.apiKey || thisConfig.apiKey.trim() === "") {
         if (active) {
           setInfo({
-            status: 'no_key',
-            errorMessage: '',
+            status: "no_key",
+            errorMessage: "",
             lastPingAt: Date.now(),
           });
         }
         return;
       }
 
-      if (active) setInfo((prev) => ({ ...prev, status: 'checking' }));
+      if (active) setInfo((prev) => ({ ...prev, status: "checking" }));
       const result = await pingModel(thisConfig);
       if (!active) return;
       if (result.ok) {
         setInfo({
-          status: 'online',
-          errorMessage: '',
+          status: "online",
+          errorMessage: "",
           lastPingAt: Date.now(),
         });
       } else {
         setInfo({
-          status: 'error',
-          errorMessage: result.error || 'Failed to reach the model API',
+          status: "error",
+          errorMessage: result.error || "Failed to reach the model API",
           lastPingAt: Date.now(),
         });
       }
@@ -54,7 +54,10 @@ export function useConnectionStatus(config: ModelConfig): ConnectionInfo {
 
     check();
     const interval = setInterval(check, 30000);
-    return () => { active = false; clearInterval(interval); };
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
   }, [model, apiKey, baseURL]);
 
   return info;

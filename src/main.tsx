@@ -33,27 +33,27 @@ if (import.meta.env.DEV) {
     model: "gemma4",
     apiKey: "ollama",
     baseURL: "http://localhost:11434/v1",
-    scope: "page"
-  }
+    scope: "page",
+  };
 } else {
   const scriptEl = document.currentScript as HTMLScriptElement | null;
 
   if (!scriptEl) {
-    throw new Error('Widget must be loaded via <script...>');
+    throw new Error("Widget must be loaded via <script...>");
   }
 
   if (!scriptEl.dataset.model || !scriptEl.dataset.apiKey || !scriptEl.dataset.baseUrl) {
-    throw new Error('Missing mandatory attributes.');
+    throw new Error("Missing mandatory attributes.");
   }
 
-  const scope = (scriptEl.dataset.scope === "broad") ? "broad" as const : "page" as const;
+  const scope = scriptEl.dataset.scope === "broad" ? ("broad" as const) : ("page" as const);
 
   modelConfig = {
     model: scriptEl.dataset.model,
     apiKey: scriptEl.dataset.apiKey,
     baseURL: scriptEl.dataset.baseUrl,
     scope,
-  }
+  };
 }
 
 render(<App modelConfig={modelConfig} />, root);

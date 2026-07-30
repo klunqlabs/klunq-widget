@@ -15,7 +15,7 @@
   --animate-spin-slow: spin-slow 8s linear infinite;
 
   /* ── Color Palette (Light Mode Defaults) ── */
-  --color-primary: #4CC1BC;
+  --color-primary: #4cc1bc;
   --color-on-primary: #00363a;
   --color-primary-container: #dbfcff;
   --color-on-primary-container: #002022;
@@ -52,10 +52,10 @@
   --color-aura-hover-shadow: rgba(0, 0, 0, 0.12);
   --color-aura-hover-glow: rgba(76, 193, 188, 0.2);
   --color-orb-bg: rgba(76, 193, 188, 0.35);
-  --color-orb-inner: #4CC1BC;
+  --color-orb-inner: #4cc1bc;
   --color-orb-glow: rgba(76, 193, 188, 0.65);
   --color-iris-scanner: rgba(76, 193, 188, 0.6);
-  --color-interaction-text: #4CC1BC;
+  --color-interaction-text: #4cc1bc;
   --color-pulse-glow: rgba(76, 193, 188, 0.3);
   --color-proactive-glow: rgba(76, 193, 188, 0.2);
   --color-click-burst: rgba(76, 193, 188, 0.7);
@@ -76,7 +76,7 @@
 /* ── Dark Theme (System Preference Override) ── */
 @media (prefers-color-scheme: dark) {
   #klunq-widget-root {
-    --color-primary: #4CC1BC;
+    --color-primary: #4cc1bc;
     --color-on-primary: #00363a;
     --color-primary-container: #0a3d3b;
     --color-on-primary-container: #88e3de;
@@ -106,10 +106,10 @@
     --color-aura-hover-shadow: rgba(0, 0, 0, 0.35);
     --color-aura-hover-glow: rgba(76, 193, 188, 0.35);
     --color-orb-bg: rgba(76, 193, 188, 0.45);
-    --color-orb-inner: #4CC1BC;
+    --color-orb-inner: #4cc1bc;
     --color-orb-glow: rgba(76, 193, 188, 0.85);
     --color-iris-scanner: rgba(76, 193, 188, 0.7);
-    --color-interaction-text: #4CC1BC;
+    --color-interaction-text: #4cc1bc;
     --color-pulse-glow: rgba(76, 193, 188, 0.3);
     --color-proactive-glow: rgba(76, 193, 188, 0.25);
     --color-click-burst: rgba(76, 193, 188, 0.7);
@@ -129,7 +129,7 @@
 
 /* ── Dark Theme (Manual Selector Toggle) ── */
 #klunq-widget-root.dark {
-  --color-primary: #4CC1BC;
+  --color-primary: #4cc1bc;
   --color-on-primary: #00363a;
   --color-primary-container: #0a3d3b;
   --color-on-primary-container: #88e3de;
@@ -159,10 +159,10 @@
   --color-aura-hover-shadow: rgba(0, 0, 0, 0.35);
   --color-aura-hover-glow: rgba(76, 193, 188, 0.35);
   --color-orb-bg: rgba(76, 193, 188, 0.45);
-  --color-orb-inner: #4CC1BC;
+  --color-orb-inner: #4cc1bc;
   --color-orb-glow: rgba(76, 193, 188, 0.85);
   --color-iris-scanner: rgba(76, 193, 188, 0.7);
-  --color-interaction-text: #4CC1BC;
+  --color-interaction-text: #4cc1bc;
   --color-pulse-glow: rgba(76, 193, 188, 0.3);
   --color-proactive-glow: rgba(76, 193, 188, 0.25);
   --color-click-burst: rgba(76, 193, 188, 0.7);
@@ -250,7 +250,6 @@
 }
 
 @keyframes pulse-glow {
-
   0%,
   100% {
     transform: scale(1);
@@ -310,13 +309,18 @@
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 20px var(--color-aura-shadow), 0 0 0 2px var(--color-aura-border);
+  box-shadow:
+    0 4px 20px var(--color-aura-shadow),
+    0 0 0 2px var(--color-aura-border);
 }
 
 .aura-eye-container:hover {
   transform: scale(1.05);
   border-color: var(--color-aura-hover-border);
-  box-shadow: 0 8px 30px var(--color-aura-hover-shadow), 0 0 15px var(--color-aura-hover-glow), 0 0 0 2px var(--color-aura-hover-border);
+  box-shadow:
+    0 8px 30px var(--color-aura-hover-shadow),
+    0 0 15px var(--color-aura-hover-glow),
+    0 0 0 2px var(--color-aura-hover-border);
 }
 
 .aura-eye-container:active {
@@ -339,7 +343,9 @@
   height: 10px;
   background-color: var(--color-orb-inner);
   border-radius: 50%;
-  box-shadow: 0 0 12px var(--color-orb-inner), 0 0 20px var(--color-orb-glow);
+  box-shadow:
+    0 0 12px var(--color-orb-inner),
+    0 0 20px var(--color-orb-glow);
   position: relative;
   z-index: 10;
 }
@@ -489,7 +495,7 @@ aside .orb-outer:hover .interaction-text {
   padding: 0.125rem 0.375rem;
   border-radius: 4px;
   font-size: 0.85em;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   word-break: break-word;
 }
 

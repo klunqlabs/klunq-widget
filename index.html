@@ -1,341 +1,368 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Klunq Widget — Playground</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Klunq Widget — Playground</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        color: #1e293b;
+        background: #f8fafc;
+        padding: 2rem;
+        line-height: 1.6;
+      }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      color: #1e293b;
-      background: #f8fafc;
-      padding: 2rem;
-      line-height: 1.6;
-    }
+      header {
+        margin-bottom: 2rem;
+      }
 
-    header {
-      margin-bottom: 2rem;
-    }
+      header h1 {
+        font-size: 1.5rem;
+      }
 
-    header h1 {
-      font-size: 1.5rem;
-    }
+      header p {
+        color: #64748b;
+        margin-top: 0.25rem;
+      }
 
-    header p {
-      color: #64748b;
-      margin-top: 0.25rem;
-    }
+      section {
+        background: #fff;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      }
 
-    section {
-      background: #fff;
-      border-radius: 8px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-    }
+      section h2 {
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #e2e8f0;
+      }
 
-    section h2 {
-      font-size: 1.1rem;
-      margin-bottom: 0.75rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid #e2e8f0;
-    }
+      #content-section p {
+        margin-bottom: 0.75rem;
+      }
 
-    #content-section p {
-      margin-bottom: 0.75rem;
-    }
+      #content-section p:last-child {
+        margin-bottom: 0;
+      }
 
-    #content-section p:last-child {
-      margin-bottom: 0;
-    }
+      .highlight-target {
+        background: #fef9c3;
+        padding: 0.75rem;
+        border-radius: 4px;
+        border-left: 3px solid #eab308;
+      }
 
-    .highlight-target {
-      background: #fef9c3;
-      padding: 0.75rem;
-      border-radius: 4px;
-      border-left: 3px solid #eab308;
-    }
+      #links-section ul {
+        list-style: none;
+      }
 
-    #links-section ul {
-      list-style: none;
-    }
+      #links-section li {
+        margin-bottom: 0.5rem;
+      }
 
-    #links-section li {
-      margin-bottom: 0.5rem;
-    }
+      #links-section a {
+        color: #6366f1;
+        text-decoration: none;
+        font-weight: 500;
+      }
 
-    #links-section a {
-      color: #6366f1;
-      text-decoration: none;
-      font-weight: 500;
-    }
+      #links-section a:hover {
+        text-decoration: underline;
+      }
 
-    #links-section a:hover {
-      text-decoration: underline;
-    }
+      .btn-group {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
 
-    .btn-group {
-      display: flex;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
+      .btn-group button {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        cursor: pointer;
+        font-weight: 500;
+        transition: background 0.15s;
+      }
 
-    .btn-group button {
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 6px;
-      font-size: 0.875rem;
-      cursor: pointer;
-      font-weight: 500;
-      transition: background 0.15s;
-    }
+      .btn-alert {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
 
-    .btn-alert {
-      background: #fee2e2;
-      color: #b91c1c;
-    }
+      .btn-alert:hover {
+        background: #fecaca;
+      }
 
-    .btn-alert:hover {
-      background: #fecaca;
-    }
+      .btn-toggle {
+        background: #dbeafe;
+        color: #1e40af;
+      }
 
-    .btn-toggle {
-      background: #dbeafe;
-      color: #1e40af;
-    }
+      .btn-toggle:hover {
+        background: #bfdbfe;
+      }
 
-    .btn-toggle:hover {
-      background: #bfdbfe;
-    }
+      .btn-counter {
+        background: #dcfce7;
+        color: #15803d;
+      }
 
-    .btn-counter {
-      background: #dcfce7;
-      color: #15803d;
-    }
+      .btn-counter:hover {
+        background: #bbf7d0;
+      }
 
-    .btn-counter:hover {
-      background: #bbf7d0;
-    }
+      #counter-value {
+        font-weight: 700;
+        font-size: 1.25rem;
+        margin-left: 0.5rem;
+      }
 
-    #counter-value {
-      font-weight: 700;
-      font-size: 1.25rem;
-      margin-left: 0.5rem;
-    }
+      #toggle-area {
+        margin-top: 0.75rem;
+        padding: 0.75rem;
+        background: #f1f5f9;
+        border-radius: 4px;
+      }
 
-    #toggle-area {
-      margin-top: 0.75rem;
-      padding: 0.75rem;
-      background: #f1f5f9;
-      border-radius: 4px;
-    }
+      #toggle-area.hidden {
+        display: none;
+      }
 
-    #toggle-area.hidden {
-      display: none;
-    }
+      #tool-log {
+        background: #1e293b;
+        color: #e2e8f0;
+        font-family: "Courier New", monospace;
+        font-size: 0.8rem;
+        padding: 0.75rem;
+        border-radius: 4px;
+        max-height: 200px;
+        overflow-y: auto;
+      }
 
-    #tool-log {
-      background: #1e293b;
-      color: #e2e8f0;
-      font-family: 'Courier New', monospace;
-      font-size: 0.8rem;
-      padding: 0.75rem;
-      border-radius: 4px;
-      max-height: 200px;
-      overflow-y: auto;
-    }
+      #tool-log .entry {
+        padding: 0.25rem 0;
+        border-bottom: 1px solid #334155;
+      }
 
-    #tool-log .entry {
-      padding: 0.25rem 0;
-      border-bottom: 1px solid #334155;
-    }
+      #tool-log .entry:last-child {
+        border-bottom: none;
+      }
 
-    #tool-log .entry:last-child {
-      border-bottom: none;
-    }
+      .klunq-tool-highlight {
+        outline: 3px solid #f59e0b !important;
+        outline-offset: 2px;
+        transition: outline 0.15s;
+      }
 
-    .klunq-tool-highlight {
-      outline: 3px solid #f59e0b !important;
-      outline-offset: 2px;
-      transition: outline 0.15s;
-    }
+      #form-section .form-group {
+        margin-bottom: 0.75rem;
+      }
 
-    #form-section .form-group {
-      margin-bottom: 0.75rem;
-    }
+      #form-section label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        color: #475569;
+      }
 
-    #form-section label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-      color: #475569;
-    }
+      #form-section input,
+      #form-section textarea,
+      #form-section select {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-family: inherit;
+        outline: none;
+        transition: border-color 0.15s;
+      }
 
-    #form-section input,
-    #form-section textarea,
-    #form-section select {
-      width: 100%;
-      padding: 0.5rem 0.75rem;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      font-size: 0.875rem;
-      font-family: inherit;
-      outline: none;
-      transition: border-color 0.15s;
-    }
+      #form-section input:focus,
+      #form-section textarea:focus,
+      #form-section select:focus {
+        border-color: #6366f1;
+      }
 
-    #form-section input:focus,
-    #form-section textarea:focus,
-    #form-section select:focus {
-      border-color: #6366f1;
-    }
+      .btn-submit {
+        padding: 0.5rem 1.25rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        background: #6366f1;
+        color: #fff;
+        transition: background 0.15s;
+      }
 
-    .btn-submit {
-      padding: 0.5rem 1.25rem;
-      border: none;
-      border-radius: 6px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      cursor: pointer;
-      background: #6366f1;
-      color: #fff;
-      transition: background 0.15s;
-    }
+      .btn-submit:hover {
+        background: #4f46e5;
+      }
 
-    .btn-submit:hover {
-      background: #4f46e5;
-    }
+      .form-output {
+        margin-top: 0.75rem;
+        padding: 0.75rem;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        line-height: 1.5;
+      }
 
-    .form-output {
-      margin-top: 0.75rem;
-      padding: 0.75rem;
-      background: #f0fdf4;
-      border: 1px solid #bbf7d0;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      line-height: 1.5;
-    }
+      .form-output.hidden {
+        display: none;
+      }
+    </style>
+  </head>
 
-    .form-output.hidden {
-      display: none;
-    }
-  </style>
-</head>
+  <body>
+    <header>
+      <h1>Klunq Widget Playground</h1>
+      <p>
+        Test the agent's ability to read content, follow links, and click elements on this page.
+      </p>
+    </header>
 
-<body>
+    <section id="content-section">
+      <h2>Content for summarization</h2>
+      <p>
+        The Klunq project is an embeddable AI chat widget built with LangChain and Preact. It is
+        designed to be added to any existing web page with zero side effects. The widget appears as
+        a floating button in the bottom-right corner of the page. When clicked, it opens a chat
+        interface where users can interact with an AI agent powered by LangChain.
+      </p>
+      <p class="highlight-target">
+        The agent has access to tools that allow it to read page content, click buttons, and follow
+        links. This makes it capable of helping users navigate the page, summarize information, and
+        trigger interactive elements on behalf of the user. All tool interactions are visible
+        through element highlighting and the log panel below.
+      </p>
+      <p>
+        LangChain is a framework for developing applications powered by large language models. It
+        provides abstractions for prompt templates, output parsing, tool use, and agent loops.
+        Preact is a fast 3kB alternative to React with the same modern API, making it ideal for
+        lightweight widget bundles.
+      </p>
+    </section>
 
-  <header>
-    <h1>Klunq Widget Playground</h1>
-    <p>Test the agent's ability to read content, follow links, and click elements on this page.</p>
-  </header>
+    <section id="links-section">
+      <h2>Links</h2>
+      <ul>
+        <li>
+          <a href="https://langchain.com" id="link-langchain" target="_blank"
+            >LangChain documentation</a
+          >
+        </li>
+        <li><a href="https://preactjs.com" id="link-preact" target="_blank">Preact website</a></li>
+        <li><a href="#content-section" id="link-jump">Jump to content section</a></li>
+      </ul>
+    </section>
 
-  <section id="content-section">
-    <h2>Content for summarization</h2>
-    <p>The Klunq project is an embeddable AI chat widget built with LangChain and Preact. It is designed to be added to
-      any existing web page with zero side effects. The widget appears as a floating button in the bottom-right corner
-      of the page. When clicked, it opens a chat interface where users can interact with an AI agent powered by
-      LangChain.</p>
-    <p class="highlight-target">The agent has access to tools that allow it to read page content, click buttons, and
-      follow links. This makes it capable of helping users navigate the page, summarize information, and trigger
-      interactive elements on behalf of the user. All tool interactions are visible through element highlighting and the
-      log panel below.</p>
-    <p>LangChain is a framework for developing applications powered by large language models. It provides abstractions
-      for prompt templates, output parsing, tool use, and agent loops. Preact is a fast 3kB alternative to React with
-      the same modern API, making it ideal for lightweight widget bundles.</p>
-  </section>
+    <section id="buttons-section">
+      <h2>Buttons</h2>
+      <div class="btn-group">
+        <button class="btn-alert" id="btn-alert" onclick="alert('Alert button was clicked!')">
+          Show alert
+        </button>
+        <button class="btn-toggle" id="btn-toggle" onclick="toggleContent()">
+          Toggle extra content
+        </button>
+        <button class="btn-counter" id="btn-counter" onclick="incrementCounter()">
+          Counter (<span id="counter-value">0</span>)
+        </button>
+      </div>
+      <div id="toggle-area">This extra content was revealed by clicking the toggle button.</div>
+    </section>
 
-  <section id="links-section">
-    <h2>Links</h2>
-    <ul>
-      <li><a href="https://langchain.com" id="link-langchain" target="_blank">LangChain documentation</a></li>
-      <li><a href="https://preactjs.com" id="link-preact" target="_blank">Preact website</a></li>
-      <li><a href="#content-section" id="link-jump">Jump to content section</a></li>
-    </ul>
-  </section>
+    <section id="form-section">
+      <h2>Form inputs</h2>
+      <div class="form-group">
+        <label for="input-name">Name</label>
+        <input type="text" id="input-name" placeholder="Enter your name" />
+      </div>
+      <div class="form-group">
+        <label for="input-email">Email</label>
+        <input type="email" id="input-email" placeholder="email@example.com" />
+      </div>
+      <div class="form-group">
+        <label for="input-message">Message</label>
+        <textarea id="input-message" placeholder="Write a message..." rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="input-topic">Topic</label>
+        <select id="input-topic">
+          <option value="">Select a topic...</option>
+          <option value="support">Support</option>
+          <option value="feedback">Feedback</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <button class="btn-submit" id="btn-submit" onclick="submitForm()">Submit</button>
+      <div id="form-output" class="form-output hidden"></div>
+    </section>
 
-  <section id="buttons-section">
-    <h2>Buttons</h2>
-    <div class="btn-group">
-      <button class="btn-alert" id="btn-alert" onclick="alert('Alert button was clicked!')">Show alert</button>
-      <button class="btn-toggle" id="btn-toggle" onclick="toggleContent()">Toggle extra content</button>
-      <button class="btn-counter" id="btn-counter" onclick="incrementCounter()">Counter (<span
-          id="counter-value">0</span>)</button>
-    </div>
-    <div id="toggle-area">This extra content was revealed by clicking the toggle button.</div>
-  </section>
+    <section>
+      <h2>Tool interaction log</h2>
+      <div id="tool-log"><span class="entry">Waiting for agent actions...</span></div>
+    </section>
 
-  <section id="form-section">
-    <h2>Form inputs</h2>
-    <div class="form-group">
-      <label for="input-name">Name</label>
-      <input type="text" id="input-name" placeholder="Enter your name" />
-    </div>
-    <div class="form-group">
-      <label for="input-email">Email</label>
-      <input type="email" id="input-email" placeholder="email@example.com" />
-    </div>
-    <div class="form-group">
-      <label for="input-message">Message</label>
-      <textarea id="input-message" placeholder="Write a message..." rows="3"></textarea>
-    </div>
-    <div class="form-group">
-      <label for="input-topic">Topic</label>
-      <select id="input-topic">
-        <option value="">Select a topic...</option>
-        <option value="support">Support</option>
-        <option value="feedback">Feedback</option>
-        <option value="other">Other</option>
-      </select>
-    </div>
-    <button class="btn-submit" id="btn-submit" onclick="submitForm()">Submit</button>
-    <div id="form-output" class="form-output hidden"></div>
-  </section>
+    <script>
+      function toggleContent() {
+        const area = document.getElementById("toggle-area");
+        area.classList.toggle("hidden");
+      }
+      let count = 0;
+      function incrementCounter() {
+        document.getElementById("counter-value").textContent = ++count;
+      }
+      function submitForm() {
+        const name = document.getElementById("input-name").value;
+        const email = document.getElementById("input-email").value;
+        const message = document.getElementById("input-message").value;
+        const topic = document.getElementById("input-topic").value;
+        const output = document.getElementById("form-output");
+        output.innerHTML =
+          "<strong>Form submitted:</strong><br>" +
+          "Name: " +
+          (name || "(empty)") +
+          "<br>" +
+          "Email: " +
+          (email || "(empty)") +
+          "<br>" +
+          "Message: " +
+          (message || "(empty)") +
+          "<br>" +
+          "Topic: " +
+          (topic || "(not selected)");
+        output.classList.remove("hidden");
+      }
+    </script>
 
-  <section>
-    <h2>Tool interaction log</h2>
-    <div id="tool-log"><span class="entry">Waiting for agent actions...</span></div>
-  </section>
+    <!-- Dev Script (data-scope is ignored in dev; defaults to "page") -->
+    <script
+      type="module"
+      src="/src/main.tsx"
+      data-model="gemma4"
+      data-api-key="ollama"
+      data-base-url="http://localhost:11434/v1"
+    ></script>
 
-  <script>
-    function toggleContent() {
-      const area = document.getElementById('toggle-area');
-      area.classList.toggle('hidden');
-    }
-    let count = 0;
-    function incrementCounter() {
-      document.getElementById('counter-value').textContent = ++count;
-    }
-    function submitForm() {
-      const name = document.getElementById('input-name').value;
-      const email = document.getElementById('input-email').value;
-      const message = document.getElementById('input-message').value;
-      const topic = document.getElementById('input-topic').value;
-      const output = document.getElementById('form-output');
-      output.innerHTML = '<strong>Form submitted:</strong><br>' +
-        'Name: ' + (name || '(empty)') + '<br>' +
-        'Email: ' + (email || '(empty)') + '<br>' +
-        'Message: ' + (message || '(empty)') + '<br>' +
-        'Topic: ' + (topic || '(not selected)');
-      output.classList.remove('hidden');
-    }
-  </script>
-
-  <!-- Dev Script (data-scope is ignored in dev; defaults to "page") -->
-  <script type="module" src="/src/main.tsx" data-model="gemma4" data-api-key="ollama"
-    data-base-url="http://localhost:11434/v1"></script>
-
-  <!-- Prod Script (add data-scope="broad" to lift the page-only restriction) -->
-  <!-- <script src="dist/klunq-widget.js" data-model="gemma4" data-api-key="ollama"
+    <!-- Prod Script (add data-scope="broad" to lift the page-only restriction) -->
+    <!-- <script src="dist/klunq-widget.js" data-model="gemma4" data-api-key="ollama"
     data-base-url="http://localhost:11434/v1" data-scope="broad"></script> -->
-
-</body>
-
+  </body>
 </html>

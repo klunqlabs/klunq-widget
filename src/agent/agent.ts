@@ -4,10 +4,10 @@ import type { BaseMessage } from "@langchain/core/messages";
 import { browserTools } from "./tools";
 
 export interface ModelConfig {
-  model: string,
-  apiKey: string,
-  baseURL: string,
-  scope?: "page" | "broad",
+  model: string;
+  apiKey: string;
+  baseURL: string;
+  scope?: "page" | "broad";
 }
 
 function buildSystemPrompt(scope: "page" | "broad"): string {
@@ -84,7 +84,7 @@ export function getAgent(config: ModelConfig) {
     model: config.model,
     apiKey: config.apiKey,
     configuration: {
-      baseURL: config.baseURL
+      baseURL: config.baseURL,
     },
     timeout: 120000,
   });
@@ -111,20 +111,20 @@ export function getAgent(config: ModelConfig) {
               new ToolMessage({
                 content: typeof result === "string" ? result : JSON.stringify(result),
                 tool_call_id: tc.id as string,
-              })
+              }),
             );
           } else {
             currentMessages.push(
               new ToolMessage({
                 content: `Error: unknown tool "${tc.name}"`,
                 tool_call_id: tc.id as string,
-              })
+              }),
             );
           }
         }
       }
 
       return { messages: currentMessages.slice(1) };
-    }
+    },
   };
 }

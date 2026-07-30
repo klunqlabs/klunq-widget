@@ -62,14 +62,15 @@ function findLink(query: string): HTMLAnchorElement | null {
   return null;
 }
 
-function setInputValue(element: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement, value: string | boolean | number) {
+function setInputValue(
+  element: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement,
+  value: string | boolean | number,
+) {
   if ("type" in element && (element.type === "checkbox" || element.type === "radio")) {
     (element as HTMLInputElement).checked = Boolean(value);
-  }
-  else if ("type" in element && element.type === "file") {
+  } else if ("type" in element && element.type === "file") {
     console.warn("File inputs cannot be given a programmatic value directly due to security.");
-  }
-  else if (element instanceof HTMLSelectElement) {
+  } else if (element instanceof HTMLSelectElement) {
     element.value = String(value);
     if (element.selectedIndex === -1) {
       for (const opt of element.options) {
@@ -78,12 +79,11 @@ function setInputValue(element: HTMLInputElement | HTMLTextAreaElement | HTMLSel
         }
       }
     }
-  }
-  else {
+  } else {
     element.value = String(value);
   }
 
-  element.dispatchEvent(new Event('input', { bubbles: true }));
+  element.dispatchEvent(new Event("input", { bubbles: true }));
 }
 
 /* ── tools ───────────────────────────────────────────── */
@@ -98,7 +98,8 @@ export const browserTools: StructuredToolInterface[] = [
     },
     {
       name: "read_page_code",
-      description: "Read the raw HTML inside <body>. Use this to discover element IDs, inspect attributes, find hidden elements, or understand the page structure before clicking or filling in fields.",
+      description:
+        "Read the raw HTML inside <body>. Use this to discover element IDs, inspect attributes, find hidden elements, or understand the page structure before clicking or filling in fields.",
       schema: z.object({}).describe("No parameters needed"),
     },
   ),
@@ -112,16 +113,23 @@ export const browserTools: StructuredToolInterface[] = [
     },
     {
       name: "read_page_content",
-      description: "Read visible text from the page or a specific section. Leave the selector empty to read everything. Use this to understand what the page says before acting.",
+      description:
+        "Read visible text from the page or a specific section. Leave the selector empty to read everything. Use this to understand what the page says before acting.",
       schema: z.object({
-        selector: z.string().optional().describe("CSS selector for a specific section (e.g. '#content-section', 'article p'). Leave empty to read the whole page."),
+        selector: z
+          .string()
+          .optional()
+          .describe(
+            "CSS selector for a specific section (e.g. '#content-section', 'article p'). Leave empty to read the whole page.",
+          ),
       }),
     },
   ),
   tool(
     async ({ query }) => {
       const el = findElement(query);
-      if (!el) return `Could not find a clickable element matching "${query}". Use read_page_code or read_page_content first to discover element names/IDs.`;
+      if (!el)
+        return `Could not find a clickable element matching "${query}". Use read_page_code or read_page_content first to discover element names/IDs.`;
       const tag = el.tagName.toLowerCase();
       const text = (el as HTMLElement).textContent?.trim() || "";
       highlight(el);
@@ -131,16 +139,22 @@ export const browserTools: StructuredToolInterface[] = [
     },
     {
       name: "click_element",
-      description: "Click a button, link, or other interactive element. Provide the element's visible text, element ID, or a CSS selector. Use read_page_code first to discover what exists on the page.",
+      description:
+        "Click a button, link, or other interactive element. Provide the element's visible text, element ID, or a CSS selector. Use read_page_code first to discover what exists on the page.",
       schema: z.object({
-        query: z.string().describe("Visible text, element ID, or CSS selector of the element to click. Examples: 'Show alert', '#btn-alert', 'button.primary'."),
+        query: z
+          .string()
+          .describe(
+            "Visible text, element ID, or CSS selector of the element to click. Examples: 'Show alert', '#btn-alert', 'button.primary'.",
+          ),
       }),
     },
   ),
   tool(
     async ({ query }) => {
       const a = findLink(query);
-      if (!a) return `Could not find a link matching "${query}". Use read_page_content to discover link text.`;
+      if (!a)
+        return `Could not find a link matching "${query}". Use read_page_content to discover link text.`;
       const href = a.getAttribute("href");
       if (!href) return `The link "${query}" has no href attribute.`;
       highlight(a);
@@ -150,16 +164,28 @@ export const browserTools: StructuredToolInterface[] = [
     },
     {
       name: "follow_link",
-      description: "Navigate to a link's destination. Provide the link's visible text, element ID, or CSS selector. Use read_page_content first to see what links are available.",
+      description:
+        "Navigate to a link's destination. Provide the link's visible text, element ID, or CSS selector. Use read_page_content first to see what links are available.",
       schema: z.object({
-        query: z.string().describe("Visible link text, element ID, or CSS selector of the link to follow. Examples: 'LangChain documentation', '#link-langchain', 'a:first-of-type'."),
+        query: z
+          .string()
+          .describe(
+            "Visible link text, element ID, or CSS selector of the link to follow. Examples: 'LangChain documentation', '#link-langchain', 'a:first-of-type'.",
+          ),
       }),
     },
   ),
   tool(
     async ({ query, value }) => {
       const el = findElement(query);
-      if (!el || !(el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement)) {
+      if (
+        !el ||
+        !(
+          el instanceof HTMLInputElement ||
+          el instanceof HTMLTextAreaElement ||
+          el instanceof HTMLSelectElement
+        )
+      ) {
         return `Could not find an input-like element matching "${query}" or element is not of type <input>, <textarea> or <select>. Use read_page_code or read_page_content first to discover element names/IDs.`;
       }
       const tag = el.tagName.toLowerCase();
@@ -170,11 +196,20 @@ export const browserTools: StructuredToolInterface[] = [
     },
     {
       name: "set_field_value",
-      description: "Type text into an input field, pick a dropdown option, or check/uncheck a checkbox or radio button. Provide the element's visible label text, element ID, or CSS selector as the query — not the value to type. Then provide the value to set. For checkboxes and radios the value must be boolean (true/false). For all other elements the value must be a string. Do not use with file inputs.",
+      description:
+        "Type text into an input field, pick a dropdown option, or check/uncheck a checkbox or radio button. Provide the element's visible label text, element ID, or CSS selector as the query — not the value to type. Then provide the value to set. For checkboxes and radios the value must be boolean (true/false). For all other elements the value must be a string. Do not use with file inputs.",
       schema: z.object({
-        query: z.string().describe("Visible label text, element ID, or CSS selector of the target input element. NOT the value to type. Examples: 'input-name', '#email-field', 'label:contains(\"Name\")'."),
-        value: z.union([z.string(), z.boolean(), z.number()]).describe("The value to set on the element. Boolean for checkboxes/radios, string or number for all other input types. Do not use with file inputs.")
-      })
-    }
-  )
+        query: z
+          .string()
+          .describe(
+            "Visible label text, element ID, or CSS selector of the target input element. NOT the value to type. Examples: 'input-name', '#email-field', 'label:contains(\"Name\")'.",
+          ),
+        value: z
+          .union([z.string(), z.boolean(), z.number()])
+          .describe(
+            "The value to set on the element. Boolean for checkboxes/radios, string or number for all other input types. Do not use with file inputs.",
+          ),
+      }),
+    },
+  ),
 ];

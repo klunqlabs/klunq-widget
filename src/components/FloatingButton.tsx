@@ -50,8 +50,7 @@ export default function FloatingButton({ onClick }: FloatingButtonProps) {
   const handleClick = () => {
     const innerOrb = innerOrbRef.current;
     if (innerOrb) {
-      innerOrb.style.boxShadow =
-        "0 0 30px var(--color-primary), 0 0 60px var(--color-click-burst)";
+      innerOrb.style.boxShadow = "0 0 30px var(--color-primary), 0 0 60px var(--color-click-burst)";
       innerOrb.style.transform = "scale(1.2)";
       setTimeout(() => {
         innerOrb.style.boxShadow = "";
@@ -62,7 +61,10 @@ export default function FloatingButton({ onClick }: FloatingButtonProps) {
   };
 
   return (
-    <div key={config.pos} class={`fixed bottom-15 max-md:bottom-4 z-60 ${config.pos === 'right' ? 'right-15 max-md:right-4' : 'left-15 max-md:left-4'}`}>
+    <div
+      key={config.pos}
+      class={`fixed bottom-15 max-md:bottom-4 z-60 ${config.pos === "right" ? "right-15 max-md:right-4" : "left-15 max-md:left-4"}`}
+    >
       <button
         ref={containerRef}
         class="aura-eye-container"
