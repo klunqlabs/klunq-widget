@@ -2,6 +2,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, cleanup, screen, fireEvent, waitFor } from '@testing-library/preact';
 import { AIMessage, HumanMessage } from '@langchain/core/messages';
+import type { BaseMessage } from '@langchain/core/messages';
 import ChatInterface from './ChatInterface';
 import { AppConfigContext, ConnectionStatusContext } from '../App';
 import type { ConnectionInfo } from '../hooks/useConnectionStatus';
@@ -21,7 +22,7 @@ const defaultConn: ConnectionInfo = {
 };
 
 function renderChatInterface(overrides?: {
-  messages?: any[];
+  messages?: BaseMessage[];
   loading?: boolean;
   conn?: ConnectionInfo;
 }) {

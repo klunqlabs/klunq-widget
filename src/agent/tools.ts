@@ -1,4 +1,4 @@
-import { tool } from "@langchain/core/tools";
+import { StructuredToolInterface, tool } from "@langchain/core/tools";
 import { z } from "zod";
 
 /* ── helpers ─────────────────────────────────────────── */
@@ -88,7 +88,7 @@ function setInputValue(element: HTMLInputElement | HTMLTextAreaElement | HTMLSel
 
 /* ── tools ───────────────────────────────────────────── */
 
-export const browserTools = [
+export const browserTools: StructuredToolInterface[] = [
   tool(
     async () => {
       logAction("Source code read.");

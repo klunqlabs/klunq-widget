@@ -1,5 +1,6 @@
 import { ChatOpenAI } from "@langchain/openai";
-import { HumanMessage, SystemMessage, ToolMessage } from "@langchain/core/messages";
+import { SystemMessage, ToolMessage } from "@langchain/core/messages";
+import type { BaseMessage } from "@langchain/core/messages";
 import { browserTools } from "./tools";
 
 export interface ModelConfig {
@@ -67,9 +68,10 @@ export async function pingModel(config: ModelConfig): Promise<PingResult> {
     const content = response.content;
     const ok = content !== undefined && content !== "";
     return ok ? { ok } : { ok: false, error: "Empty response" };
-  } catch (err: any) {
-    const status = err?.status;
-    const message = err?.message || "Unknown error";
+  } catch (err: unknown) {
+    const apiError = err as { status?: number; message?: string } | null;
+    const status = apiError?.status;
+    const message = apiError?.message || "Unknown error";
     if (status) {
       return { ok: false, error: `${status} ${message}` };
     }
@@ -90,9 +92,9 @@ export function getAgent(config: ModelConfig) {
   const modelWithTools = model.bindTools(browserTools);
 
   return {
-    async invoke({ messages }: { messages: any[] }) {
+    async invoke({ messages }: { messages: BaseMessage[] }) {
       const systemMsg = new SystemMessage(buildSystemPrompt(config.scope ?? "page"));
-      let currentMessages: any[] = [systemMsg, ...messages];
+      const currentMessages: (typeof systemMsg | BaseMessage)[] = [systemMsg, ...messages];
 
       for (let i = 0; i < 25; i++) {
         const response = await modelWithTools.invoke(currentMessages);
@@ -102,9 +104,9 @@ export function getAgent(config: ModelConfig) {
         if (toolCalls.length === 0) break;
 
         for (const tc of toolCalls) {
-          const tool = browserTools.find((t: any) => t.name === tc.name);
+          const tool = browserTools.find((t) => t.name === tc.name);
           if (tool) {
-            const result = await (tool as any).invoke(tc.args);
+            const result = await tool.invoke(tc.args as Record<string, unknown>);
             currentMessages.push(
               new ToolMessage({
                 content: typeof result === "string" ? result : JSON.stringify(result),

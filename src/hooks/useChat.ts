@@ -24,7 +24,7 @@ export function useChat() {
     const userMsg = new HumanMessage(text);
     const updatedMessages = [...messages, userMsg]
 
-    setMessages((prev) => updatedMessages);
+    setMessages(updatedMessages);
     setLoading(true);
 
     try {

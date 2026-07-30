@@ -91,7 +91,7 @@ describe('useChat', () => {
   });
 
   it('sets loading true while waiting for agent then false after', async () => {
-    let resolve: (v: any) => void;
+    let resolve: (v: { messages: BaseMessage[] }) => void;
     mockInvoke.mockImplementation(() => new Promise((r) => { resolve = r; }));
     const { getByTestId } = harness([welcome]);
     fireEvent.click(getByTestId('send'));
