@@ -20,7 +20,7 @@ The widget is published to **npm** and served via **jsDelivr**, which automatica
 
 ```html
 <script
-  src="https://cdn.jsdelivr.net/npm/klunq-widget@1.0.0/dist/klunq-widget.js"
+  src="https://cdn.jsdelivr.net/npm/@klunqlabs/klunq-widget@1.0.0/dist/klunq-widget.js"
   data-model="gemma4"
   data-api-key="ollama"
   data-base-url="http://localhost:11434/v1"
@@ -107,7 +107,7 @@ Pass via `<script>` attributes:
 
 ```html
 <script
-  src="https://cdn.jsdelivr.net/npm/klunq-widget@1.0.0/dist/klunq-widget.js"
+  src="https://cdn.jsdelivr.net/npm/@klunqlabs/klunq-widget@1.0.0/dist/klunq-widget.js"
   data-model="gpt-4o"
   data-api-key="sk-..."
   data-base-url="https://api.openai.com/v1"

@@ -27,7 +27,7 @@ The widget is published to **npm** and served via **jsDelivr** (auto gzip/brotli
 
 ```html
 <script
-  src="https://cdn.jsdelivr.net/npm/klunq-widget@<version>/dist/klunq-widget.js"
+  src="https://cdn.jsdelivr.net/npm/@klunqlabs/klunq-widget@<version>/dist/klunq-widget.js"
   data-model="<model>"
   data-api-key="<key>"
   data-base-url="<url>"
@@ -48,7 +48,7 @@ Examples:
 ```html
 <!-- Strict mode (default): agent only answers page-related questions -->
 <script
-  src="https://cdn.jsdelivr.net/npm/klunq-widget@1.0.0/dist/klunq-widget.js"
+  src="https://cdn.jsdelivr.net/npm/@klunqlabs/klunq-widget@1.0.0/dist/klunq-widget.js"
   data-model="gemma4"
   data-api-key="ollama"
   data-base-url="http://localhost:11434/v1"
@@ -56,7 +56,7 @@ Examples:
 
 <!-- Broad mode: agent may also answer general questions -->
 <script
-  src="https://cdn.jsdelivr.net/npm/klunq-widget@1.0.0/dist/klunq-widget.js"
+  src="https://cdn.jsdelivr.net/npm/@klunqlabs/klunq-widget@1.0.0/dist/klunq-widget.js"
   data-model="gemma4"
   data-api-key="ollama"
   data-base-url="http://localhost:11434/v1"

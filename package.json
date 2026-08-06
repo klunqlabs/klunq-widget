@@ -1,5 +1,5 @@
 {
-  "name": "klunq-widget",
+  "name": "@klunqlabs/klunq-widget",
   "private": false,
   "version": "0.0.1",
   "type": "module",
@@ -30,6 +30,9 @@
     "dist"
   ],
   "jsdelivr": "dist/klunq-widget.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "vite",
     "typecheck": "tsc --noEmit",
