@@ -1,8 +1,35 @@
 {
   "name": "klunq-widget",
-  "private": true,
+  "private": false,
   "version": "0.0.1",
   "type": "module",
+  "description": "Embeddable AI chat widget built with Preact, Tailwind CSS v4, LangChain, and TypeScript. Designed to be dropped into any existing web page with zero side effects.",
+  "keywords": [
+    "ai",
+    "chatbot",
+    "widget",
+    "llm",
+    "agent",
+    "langchain",
+    "preact",
+    "browser-automation",
+    "embeddable",
+    "web-component"
+  ],
+  "license": "MIT",
+  "author": "Samuel Ján Mucha <admin@klunqlabs.com>",
+  "homepage": "https://github.com/klunqlabs/klunq-widget",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/klunqlabs/klunq-widget.git"
+  },
+  "bugs": {
+    "url": "https://github.com/klunqlabs/klunq-widget/issues"
+  },
+  "files": [
+    "dist"
+  ],
+  "jsdelivr": "dist/klunq-widget.js",
   "scripts": {
     "dev": "vite",
     "typecheck": "tsc --noEmit",

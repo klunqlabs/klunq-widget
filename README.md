@@ -14,6 +14,21 @@ An embeddable AI chat widget built with **Preact**, **Tailwind CSS v4**, **LangC
 
 ## Quick Start
 
+### Embedding
+
+The widget is published to **npm** and served via **jsDelivr**, which automatically gzips/brotli-compresses it. Add it to any page:
+
+```html
+<script
+  src="https://cdn.jsdelivr.net/npm/klunq-widget@1.0.0/dist/klunq-widget.js"
+  data-model="gemma4"
+  data-api-key="ollama"
+  data-base-url="http://localhost:11434/v1"
+></script>
+```
+
+Use `@<version>` to pin to a release (recommended for production). During development, a relative `src="klunq-widget.js"` pointing at `dist/` also works.
+
 ### Development
 
 ```bash
@@ -30,17 +45,6 @@ npm run build
 ```
 
 Outputs `dist/klunq-widget.js` (IIFE, CSS inlined).
-
-### Embedding
-
-```html
-<script
-  src="klunq-widget.js"
-  data-model="gemma4"
-  data-api-key="ollama"
-  data-base-url="http://localhost:11434/v1"
-></script>
-```
 
 **Required attributes:**
 
@@ -103,7 +107,7 @@ Pass via `<script>` attributes:
 
 ```html
 <script
-  src="klunq-widget.js"
+  src="https://cdn.jsdelivr.net/npm/klunq-widget@1.0.0/dist/klunq-widget.js"
   data-model="gpt-4o"
   data-api-key="sk-..."
   data-base-url="https://api.openai.com/v1"
