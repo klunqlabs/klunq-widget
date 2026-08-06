@@ -21,7 +21,7 @@
   "homepage": "https://github.com/klunqlabs/klunq-widget",
   "repository": {
     "type": "git",
-    "url": "https://github.com/klunqlabs/klunq-widget.git"
+    "url": "git+https://github.com/klunqlabs/klunq-widget.git"
   },
   "bugs": {
     "url": "https://github.com/klunqlabs/klunq-widget/issues"
@@ -31,7 +31,8 @@
   ],
   "jsdelivr": "dist/klunq-widget.js",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "scripts": {
     "dev": "vite",
