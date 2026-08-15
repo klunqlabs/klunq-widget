@@ -12,6 +12,14 @@ An embeddable AI chat widget built with **Preact**, **Tailwind CSS v4**, **LangC
 - **Lightweight** — ~250KB gzipped (Preact + LangChain + tools)
 - **Connection monitoring** — Auto-detects API reachability with colored status indicator
 
+## Security Disclaimer
+
+> **Your API key is exposed**
+
+The embed script sends the API key to the client, where it is visible to anyone and publicly available. Prefer free or capped [OpenRouter](https://openrouter.ai) keys that are rotated regularly, or route requests through your own [LiteLLM](https://www.litellm.ai/) proxy.
+
+We are building **klunq-proxy** to fix this with disposable virtual keys and request inspection that cancels suspicious calls — work in progress, not available yet.
+
 ## Quick Start
 
 ### Embedding
