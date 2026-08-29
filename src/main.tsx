@@ -42,7 +42,7 @@ if (import.meta.env.DEV) {
     throw new Error("Widget must be loaded via <script...>");
   }
 
-  if (!scriptEl.dataset.model || !scriptEl.dataset.apiKey || !scriptEl.dataset.baseUrl) {
+  if (!scriptEl.dataset.model || !scriptEl.dataset.baseUrl) {
     throw new Error("Missing mandatory attributes.");
   }
 
@@ -50,7 +50,7 @@ if (import.meta.env.DEV) {
 
   modelConfig = {
     model: scriptEl.dataset.model,
-    apiKey: scriptEl.dataset.apiKey,
+    apiKey: scriptEl.dataset.apiKey ?? "",
     baseURL: scriptEl.dataset.baseUrl,
     scope,
   };
