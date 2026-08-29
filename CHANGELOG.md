@@ -1,3 +1,9 @@
+## [1.0.1](https://github.com/klunqlabs/klunq-widget/compare/v1.0.0...v1.0.1) (2026-08-29)
+
+### Bug Fixes
+
+- no api key does not result in an error ([#2](https://github.com/klunqlabs/klunq-widget/issues/2)) ([6cd9980](https://github.com/klunqlabs/klunq-widget/commit/6cd99800fe2750cc2028dc43c6ef4beeca1137d0))
+
 # 1.0.0 (2026-08-06)
 
 ### Bug Fixes

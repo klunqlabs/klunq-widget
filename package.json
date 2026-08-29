@@ -1,7 +1,7 @@
 {
   "name": "@klunqlabs/klunq-widget",
   "private": false,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "Embeddable AI chat widget built with Preact, Tailwind CSS v4, LangChain, and TypeScript. Designed to be dropped into any existing web page with zero side effects.",
   "keywords": [
