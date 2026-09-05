@@ -1,3 +1,9 @@
+## [1.0.2](https://github.com/klunqlabs/klunq-widget/compare/v1.0.1...v1.0.2) (2026-09-05)
+
+### Bug Fixes
+
+- **agent:** enforce shared watermark prefix with security hierarchy ([#3](https://github.com/klunqlabs/klunq-widget/issues/3)) ([c46cc77](https://github.com/klunqlabs/klunq-widget/commit/c46cc7780dd700fdff4c3dd13ec729168b0c9191))
+
 ## [1.0.1](https://github.com/klunqlabs/klunq-widget/compare/v1.0.0...v1.0.1) (2026-08-29)
 
 ### Bug Fixes
