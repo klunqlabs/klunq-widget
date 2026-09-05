@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { pingModel, getAgent } from "./agent";
+import { pingModel, getAgent, WATERMARK, buildSystemPrompt } from "./agent";
 import { HumanMessage } from "@langchain/core/messages";
 
 const mockInvoke = vi.hoisted(() => vi.fn());
@@ -71,6 +71,15 @@ describe("pingModel", () => {
     const result = await pingModel(config);
     expect(result).toEqual({ ok: false, error: "Unknown error" });
   });
+
+  it("sends WATERMARK in ping system message", async () => {
+    mockInvoke.mockResolvedValue({ content: "pong" });
+    await pingModel(config);
+    const systemMsg = mockInvoke.mock.calls[0][0][0];
+    const content = (systemMsg as { content: string }).content ?? String(systemMsg);
+    expect(content).toContain(WATERMARK);
+    expect(content).toContain("Ping");
+  });
 });
 
 describe("getAgent", () => {
@@ -139,8 +148,10 @@ describe("getAgent", () => {
 
     const calls = mockAgentInvoke.mock.calls;
     const systemMsg = calls[0][0][0];
-    expect(systemMsg.content).toContain("broad scope");
+    expect(systemMsg.content).toContain("broad");
     expect(systemMsg.content).not.toContain("SCOPE RESTRICTION");
+    // broad still denies disallowed categories but is benevolent
+    expect(systemMsg.content).toContain("MUST DENY");
   });
 
   it("defaults to page scope when no scope provided", async () => {
@@ -153,6 +164,39 @@ describe("getAgent", () => {
     const systemMsg = calls[0][0][0];
     expect(systemMsg.content).toContain("SCOPE RESTRICTION");
     expect(systemMsg.content).toContain("OFF-TOPIC");
+  });
+
+  it("both scopes share WATERMARK prefix with divider", async () => {
+    mockAgentInvoke.mockResolvedValue({ content: "OK" });
+
+    const agentPage = getAgent({ ...config, scope: "page" });
+    await agentPage.invoke({ messages: [new HumanMessage("Hi")] });
+    const pageMsg = mockAgentInvoke.mock.calls[0][0][0].content as string;
+    mockAgentInvoke.mockClear();
+
+    const agentBroad = getAgent({ ...config, scope: "broad" });
+    await agentBroad.invoke({ messages: [new HumanMessage("Hi")] });
+    const broadMsg = mockAgentInvoke.mock.calls[0][0][0].content as string;
+
+    for (const msg of [pageMsg, broadMsg]) {
+      expect(msg).toContain(WATERMARK);
+      expect(msg.indexOf(WATERMARK)).toBe(0);
+      expect(msg).toContain("Klunq Widget");
+      expect(msg).toContain("SECURITY HIERARCHY");
+    }
+    // Watermark is identical prefix — copying it to guardrail is sufficient
+    expect(pageMsg.slice(0, WATERMARK.length)).toBe(WATERMARK);
+    expect(broadMsg.slice(0, WATERMARK.length)).toBe(WATERMARK);
+  });
+
+  it("buildSystemPrompt is consistent and starts with WATERMARK", () => {
+    const page = buildSystemPrompt("page");
+    const broad = buildSystemPrompt("broad");
+    expect(page.startsWith(WATERMARK)).toBe(true);
+    expect(broad.startsWith(WATERMARK)).toBe(true);
+    expect(page).toContain("SCOPE RESTRICTION");
+    expect(broad).toContain("MUST DENY");
+    expect(broad).not.toContain("SCOPE RESTRICTION");
   });
 
   it("stops after max 25 iterations when model keeps returning tool calls", async () => {
