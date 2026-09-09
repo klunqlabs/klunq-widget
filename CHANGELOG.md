@@ -1,3 +1,9 @@
+## [1.0.3](https://github.com/klunqlabs/klunq-widget/compare/v1.0.2...v1.0.3) (2026-09-09)
+
+### Bug Fixes
+
+- **agent:** token-free light health check with graceful request errors ([#4](https://github.com/klunqlabs/klunq-widget/issues/4)) ([aa8c173](https://github.com/klunqlabs/klunq-widget/commit/aa8c1734174c2e424faefce2ccf81468c2b85a08))
+
 ## [1.0.2](https://github.com/klunqlabs/klunq-widget/compare/v1.0.1...v1.0.2) (2026-09-05)
 
 ### Bug Fixes
