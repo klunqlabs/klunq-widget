@@ -129,6 +129,26 @@ describe("useChat", () => {
     });
   });
 
+  it("shows a friendly message on 401 without extra agent calls", async () => {
+    mockInvoke.mockRejectedValue({ status: 401, message: "Unauthorized" });
+    const { getByTestId } = harness([welcome]);
+    fireEvent.click(getByTestId("send"));
+    await waitFor(() => {
+      expect(getByTestId("count").textContent).toBe("2");
+    });
+    expect(getByTestId("loading").textContent).toBe("false");
+  });
+
+  it("shows a rate-limit message on 429", async () => {
+    mockInvoke.mockRejectedValue({ status: 429, message: "Too Many Requests" });
+    const { getByTestId } = harness([welcome]);
+    fireEvent.click(getByTestId("send"));
+    await waitFor(() => {
+      expect(getByTestId("count").textContent).toBe("2");
+    });
+    expect(mockInvoke).toHaveBeenCalledTimes(1);
+  });
+
   it("clearMessages keeps only the first message", () => {
     const extra = new AIMessage("Extra");
     const { getByTestId } = harness([welcome, extra]);
