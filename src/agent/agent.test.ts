@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { pingModel, getAgent, WATERMARK, buildSystemPrompt } from "./agent";
 import { HumanMessage } from "@langchain/core/messages";
 
@@ -35,50 +35,99 @@ beforeEach(() => {
   mockAgentInvoke.mockReset();
 });
 
-describe("pingModel", () => {
-  it("returns { ok: true } when invoke returns non-empty content", async () => {
-    mockInvoke.mockResolvedValue({ content: "pong" });
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
+
+const mockFetch = vi.hoisted(() => vi.fn());
+function stubFetch(impl: (...args: unknown[]) => unknown) {
+  mockFetch.mockImplementation(impl as (...args: never[]) => unknown);
+  vi.stubGlobal("fetch", mockFetch);
+}
+function jsonResponse(body: unknown, status = 200) {
+  return { ok: status >= 200 && status < 300, status, json: async () => body };
+}
+
+describe("pingModel (light check, no tokens)", () => {
+  beforeEach(() => {
+    mockFetch.mockReset();
+  });
+
+  it("returns ok when GET v1/models lists the model", async () => {
+    stubFetch(async () => jsonResponse({ data: [{ id: "test-model" }] }));
+    const result = await pingModel(config);
+    expect(result).toEqual({ ok: true });
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+    expect(String(mockFetch.mock.calls[0][0])).toBe("http://localhost:11434/v1/models");
+    expect(mockInvoke).not.toHaveBeenCalled();
+  });
+
+  it("matches base model name without tag (gemma4 vs gemma4:latest)", async () => {
+    stubFetch(async () => jsonResponse({ data: [{ id: "test-model:latest" }] }));
     const result = await pingModel(config);
     expect(result).toEqual({ ok: true });
   });
 
-  it('returns ok: false with "Empty response" when content is empty string', async () => {
-    mockInvoke.mockResolvedValue({ content: "" });
+  it("returns model-not-available when v1/models omits the model", async () => {
+    stubFetch(async () => jsonResponse({ data: [{ id: "other" }] }));
     const result = await pingModel(config);
-    expect(result).toEqual({ ok: false, error: "Empty response" });
+    expect(result.ok).toBe(false);
+    expect(result.error).toContain("test-model");
+    expect(mockFetch).toHaveBeenCalledTimes(1);
   });
 
-  it('returns ok: false with "Empty response" when content is undefined', async () => {
-    mockInvoke.mockResolvedValue({ content: undefined });
+  it("falls through to readiness when v1/models is missing (404)", async () => {
+    stubFetch(async (...args: unknown[]) => {
+      const url = String(args[0]);
+      return url.endsWith("/v1/models")
+        ? { ok: false, status: 404 }
+        : jsonResponse({ status: "healthy" });
+    });
     const result = await pingModel(config);
-    expect(result).toEqual({ ok: false, error: "Empty response" });
+    expect(result).toEqual({ ok: true });
+    expect(mockFetch).toHaveBeenCalledTimes(2);
+    expect(String(mockFetch.mock.calls[1][0])).toBe("http://localhost:11434/health/readiness");
   });
 
-  it("returns ok: false with error message on exception", async () => {
-    mockInvoke.mockRejectedValue(new Error("Network error"));
+  it("falls through to /api/tags when both v1/models and readiness are missing", async () => {
+    stubFetch(async (...args: unknown[]) => {
+      const u = String(args[0]);
+      if (u.endsWith("/v1/models")) return { ok: false, status: 404 };
+      if (u.endsWith("/health/readiness")) return { ok: false, status: 404 };
+      return jsonResponse({ models: [{ name: "test-model:latest" }] });
+    });
     const result = await pingModel(config);
-    expect(result).toEqual({ ok: false, error: "Network error" });
+    expect(result).toEqual({ ok: true });
+    expect(mockFetch).toHaveBeenCalledTimes(3);
   });
 
-  it("returns ok: false with status prepended on HTTP error", async () => {
-    mockInvoke.mockRejectedValue({ status: 401, message: "Unauthorized" });
+  it("returns offline error when all probes are missing", async () => {
+    stubFetch(async () => ({ ok: false, status: 404 }));
     const result = await pingModel(config);
-    expect(result).toEqual({ ok: false, error: "401 Unauthorized" });
+    expect(result).toEqual({ ok: false, error: "Failed to reach the model API" });
+    expect(mockInvoke).not.toHaveBeenCalled();
   });
 
-  it('returns ok: false with "Unknown error" when err has no message', async () => {
-    mockInvoke.mockRejectedValue({});
+  it("returns auth error immediately on 401 without further probes", async () => {
+    stubFetch(async () => ({ ok: false, status: 401 }));
     const result = await pingModel(config);
-    expect(result).toEqual({ ok: false, error: "Unknown error" });
+    expect(result.ok).toBe(false);
+    expect(result.error).toContain("401");
+    expect(mockFetch).toHaveBeenCalledTimes(1);
   });
 
-  it("sends WATERMARK in ping system message", async () => {
-    mockInvoke.mockResolvedValue({ content: "pong" });
-    await pingModel(config);
-    const systemMsg = mockInvoke.mock.calls[0][0][0];
-    const content = (systemMsg as { content: string }).content ?? String(systemMsg);
-    expect(content).toContain(WATERMARK);
-    expect(content).toContain("Ping");
+  it("derives /v1/models under root when baseURL has no /v1 suffix", async () => {
+    stubFetch(async () => jsonResponse({ data: [{ id: "test-model" }] }));
+    const result = await pingModel({ ...config, baseURL: "http://localhost:11434" });
+    expect(result).toEqual({ ok: true });
+    expect(String(mockFetch.mock.calls[0][0])).toBe("http://localhost:11434/v1/models");
+  });
+
+  it("returns invalid base URL error for malformed baseURL", async () => {
+    stubFetch(async () => jsonResponse({ data: [] }));
+    const result = await pingModel({ ...config, baseURL: "not a url" });
+    expect(result).toEqual({ ok: false, error: "Invalid base URL" });
+    expect(mockFetch).not.toHaveBeenCalled();
   });
 });
 

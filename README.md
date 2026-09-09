@@ -105,7 +105,7 @@ The widget auto-injects a floating chat button into `document.body`.
 - **Agent** (`agent/agent.ts`) uses `@langchain/openai` with bound browser tools (`read_page_content`, `read_page_code`, `click_element`, `follow_link`, `set_field_value`). Runs a 25-step ReAct loop.
 - **Tools** (`agent/tools.ts`) execute in host page context via `window` — can read/click/type/navigate any element.
 - **Styling** — Tailwind v4 via `@tailwindcss/vite`. All colors use CSS custom properties (`--color-*`) defined in `@theme`. Dark overrides via `@media (prefers-color-scheme: dark)` and `.dark` class on shadow root.
-- **Connection monitoring** — On mount, the widget sends a "Ping" system message to the API via `pingModel()`. Pings repeat every 30s. A colored dot next to the Klunq logo reflects the current state: green (online), orange (no API key), red (error), amber (checking). Hovering the dot shows a tooltip with details. When the API is unreachable or no key is provided, all send controls are disabled.
+- **Connection monitoring** — On mount, the widget runs a token-free light check (`GET /v1/models`, then `/health/readiness`, then `/api/tags`). Checks repeat every 30s. A colored dot next to the Klunq logo reflects the current state: green (online), orange (no API key), red (error), amber (checking). Hovering the dot shows a tooltip with details. When the API is unreachable or no key is provided, all send controls are disabled.
 
 ## Configuration
 
@@ -152,7 +152,9 @@ The widget monitors API reachability via periodic pings and displays the result 
 | `no_key`   | Orange    | "No API key. Try logging in to get one." | No                  |
 | `error`    | Red       | HTTP status + error message              | No                  |
 
-The first ping runs on mount. Subsequent pings run every 30 seconds. On `error`, the tooltip displays the actual error (e.g. `401 Unauthorized`, `429 Too Many Requests`, `503 Service Unavailable`). Pings use a 20-second timeout and `maxTokens: 5` to minimize cost.
+The first light check runs on mount. Subsequent checks run every 30 seconds. On `error`, the tooltip displays the actual error (e.g. `401 Authentication failed`, `429 Rate limited`, `503 Provider not ready`). Checks use short fetch timeouts and never spend tokens — no proactive LLM "ping" is sent.
+
+Real user requests are the final probe: `sendMessage` sends directly and maps failures to friendly messages (auth → check key, 429 → wait and retry, 5xx/network → provider unreachable). There is no client-side model failover; LiteLLM `fallbacks:` / OpenRouter auto-fallback (including `openrouter/free`) must be configured proxy-side.
 
 ## Browser Tools
 

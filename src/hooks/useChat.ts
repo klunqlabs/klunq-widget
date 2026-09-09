@@ -31,8 +31,7 @@ export function useChat() {
       const reply = await agent.current.invoke({ messages: updatedMessages });
       setMessages((_) => reply.messages);
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : "Unknown error";
-      setMessages((prev) => [...prev, new AIMessage(`Error: ${errorMsg}`)]);
+      setMessages((prev) => [...prev, new AIMessage(friendlyErrorMessage(err))]);
     } finally {
       setLoading(false);
     }
@@ -43,4 +42,22 @@ export function useChat() {
   };
 
   return { messages, clearMessages, loading, sendMessage };
+}
+
+function friendlyErrorMessage(err: unknown): string {
+  const status = (err as { status?: number } | null)?.status;
+  const raw = err instanceof Error ? err.message : "Unknown error";
+  if (status === 401 || status === 403) {
+    return `Authentication failed (${status}). Check your API key. (${raw})`;
+  }
+  if (status === 429) {
+    return `Rate limited (429). Please wait a moment and retry. (${raw})`;
+  }
+  if (status && status >= 500) {
+    return `Provider error (${status}). Please retry. (${raw})`;
+  }
+  if (/timeout|timed out|abort|network|fetch|failed to fetch/i.test(raw)) {
+    return `Provider unreachable. Check your connection and try again. (${raw})`;
+  }
+  return `Error: ${raw}`;
 }

@@ -67,28 +67,146 @@ export interface PingResult {
   error?: string;
 }
 
-export async function pingModel(config: ModelConfig): Promise<PingResult> {
-  const model = new ChatOpenAI({
-    model: config.model,
-    apiKey: config.apiKey,
-    configuration: { baseURL: config.baseURL },
-    timeout: 20000,
-  });
+const HEALTH_TIMEOUT_MS = 8000;
 
+function resolveRoot(baseURL: string): string | null {
   try {
-    const response = await model.invoke([new SystemMessage(`${WATERMARK}\n\nPing`)]);
-    const content = response.content;
-    const ok = content !== undefined && content !== "";
-    return ok ? { ok } : { ok: false, error: "Empty response" };
-  } catch (err: unknown) {
-    const apiError = err as { status?: number; message?: string } | null;
-    const status = apiError?.status;
-    const message = apiError?.message || "Unknown error";
-    if (status) {
-      return { ok: false, error: `${status} ${message}` };
-    }
-    return { ok: false, error: message };
+    const url = new URL(baseURL);
+    url.pathname = url.pathname.replace(/\/v1\/?$/, "").replace(/\/$/, "");
+    url.search = "";
+    url.hash = "";
+    return url.toString().replace(/\/$/, "");
+  } catch {
+    return null;
   }
+}
+
+function resolveModelsUrl(baseURL: string, root: string): string {
+  const normalized = baseURL.replace(/\/$/, "");
+  return normalized.endsWith("/v1") ? `${normalized}/models` : `${root}/v1/models`;
+}
+
+function modelMatches(configured: string, candidate: string): boolean {
+  if (!candidate) return false;
+  if (candidate === configured) return true;
+  return candidate.split(":")[0] === configured.split(":")[0];
+}
+
+async function fetchWithTimeout(url: string, init: RequestInit): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), HEALTH_TIMEOUT_MS);
+  try {
+    return await fetch(url, { ...init, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function authHeaders(apiKey: string): Record<string, string> {
+  const headers: Record<string, string> = { Accept: "application/json" };
+  if (apiKey && apiKey.trim() !== "") headers.Authorization = `Bearer ${apiKey}`;
+  return headers;
+}
+
+async function checkV1Models(modelsUrl: string, config: ModelConfig): Promise<PingResult | null> {
+  let res: Response;
+  try {
+    res = await fetchWithTimeout(modelsUrl, { headers: authHeaders(config.apiKey) });
+  } catch (err) {
+    return err instanceof DOMException && err.name === "AbortError"
+      ? { ok: false, error: "Health check timed out" }
+      : null;
+  }
+  if (res.status === 404 || res.status === 405) return null;
+  if (res.status === 401 || res.status === 403) {
+    return { ok: false, error: `${res.status} Authentication failed. Check your API key.` };
+  }
+  if (res.status === 429) {
+    return { ok: false, error: "429 Rate limited. Please wait and retry." };
+  }
+  if (!res.ok) return null;
+  try {
+    const data = (await res.json()) as { data?: { id?: string }[] };
+    const ids = Array.isArray(data?.data) ? data.data : null;
+    if (!ids) return { ok: true };
+    if (ids.length === 0) return { ok: false, error: "No models available on the provider" };
+    const found = ids.some((m) => modelMatches(config.model, m?.id ?? ""));
+    return found ? { ok: true } : { ok: false, error: `Model "${config.model}" not available` };
+  } catch {
+    return { ok: true };
+  }
+}
+
+async function checkReadiness(root: string): Promise<PingResult | null> {
+  let res: Response;
+  try {
+    res = await fetchWithTimeout(`${root}/health/readiness`, {
+      headers: { Accept: "application/json" },
+    });
+  } catch (err) {
+    return err instanceof DOMException && err.name === "AbortError"
+      ? { ok: false, error: "Health check timed out" }
+      : null;
+  }
+  if (res.status === 404 || res.status === 405) return null;
+  if (res.status === 503) return { ok: false, error: "503 Provider not ready" };
+  if (!res.ok) return null;
+  try {
+    const data = (await res.json()) as { status?: string };
+    if (typeof data?.status === "string" && data.status.toLowerCase() !== "healthy") {
+      return { ok: false, error: `Provider not ready (${data.status})` };
+    }
+  } catch {
+    // plain-text body counts as healthy on 2xx
+  }
+  return { ok: true };
+}
+
+async function checkApiTags(root: string, config: ModelConfig): Promise<PingResult | null> {
+  let res: Response;
+  try {
+    res = await fetchWithTimeout(`${root}/api/tags`, {
+      headers: { Accept: "application/json" },
+    });
+  } catch (err) {
+    return err instanceof DOMException && err.name === "AbortError"
+      ? { ok: false, error: "Health check timed out" }
+      : null;
+  }
+  if (res.status === 404 || res.status === 405) return null;
+  if (res.status === 401 || res.status === 403) {
+    return { ok: false, error: `${res.status} Authentication failed. Check your API key.` };
+  }
+  if (!res.ok) return null;
+  try {
+    const data = (await res.json()) as { models?: { name?: string; model?: string }[] };
+    const models = Array.isArray(data?.models) ? data.models : null;
+    if (!models) return { ok: true };
+    if (models.length === 0) return { ok: false, error: "No models available on the provider" };
+    const found = models.some(
+      (m) =>
+        modelMatches(config.model, m?.name ?? "") || modelMatches(config.model, m?.model ?? ""),
+    );
+    return found ? { ok: true } : { ok: false, error: `Model "${config.model}" not available` };
+  } catch {
+    return { ok: true };
+  }
+}
+
+export async function pingModel(config: ModelConfig): Promise<PingResult> {
+  const root = resolveRoot(config.baseURL);
+  if (!root) return { ok: false, error: "Invalid base URL" };
+
+  const v1 = await checkV1Models(resolveModelsUrl(config.baseURL, root), config);
+  if (v1) return v1;
+
+  const readiness = await checkReadiness(root);
+  if (readiness) return readiness;
+
+  const tags = await checkApiTags(root, config);
+  if (tags) return tags;
+
+  return { ok: false, error: "Failed to reach the model API" };
 }
 
 export function getAgent(config: ModelConfig) {
