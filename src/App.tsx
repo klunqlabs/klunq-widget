@@ -1,11 +1,12 @@
 import { createContext } from "preact";
-import { Dispatch, StateUpdater, useState } from "preact/hooks";
+import { Dispatch, StateUpdater, useEffect, useState } from "preact/hooks";
 import { AIMessage } from "@langchain/core/messages";
 import type { BaseMessage } from "@langchain/core/messages";
 
 import FloatingButton from "./components/FloatingButton";
 import ChatInterface from "./components/ChatInterface";
 import { ModelConfig } from "./agent/agent";
+import { loadMessages, saveMessages } from "./agent/messageStorage";
 import { ConnectionInfo, useConnectionStatus } from "./hooks/useConnectionStatus";
 
 export const ModelConfigContext = createContext<ModelConfig | undefined>(undefined);
@@ -32,14 +33,19 @@ export const MessagesContext = createContext<MessagesContextInterface | undefine
 export default function App({ modelConfig }: { modelConfig: ModelConfig }) {
   const [isOpen, setIsOpen] = useState(false);
   const [pos, setPos] = useState("right");
-  const [messages, setMessages] = useState<BaseMessage[]>([
-    new AIMessage("I am observing. How shall I assist you with this page?"),
-  ]);
+  const [messages, setMessages] = useState<BaseMessage[]>(
+    () =>
+      loadMessages() ?? [new AIMessage("I am observing. How shall I assist you with this page?")],
+  );
   const [loading, setLoading] = useState(false);
   const connectionInfo = useConnectionStatus(modelConfig);
 
+  useEffect(() => {
+    saveMessages(messages);
+  }, [messages]);
+
   const togglePosition = () => {
-    setPos(pos === "right" ? "left" : "right");
+    setPos((p) => (p === "right" ? "left" : "right"));
   };
 
   return (

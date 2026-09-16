@@ -1,4 +1,4 @@
-import { useContext, useRef } from "preact/hooks";
+import { useContext, useEffect, useRef } from "preact/hooks";
 import { getAgent } from "../agent/agent";
 import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import { MessagesContext, ModelConfigContext } from "../App";
@@ -20,25 +20,41 @@ export function useChat() {
 
   const { messages, setMessages, loading, setLoading } = messageContext;
 
+  // Synchronous mirror of the latest messages. Render snapshots go stale
+  // across rapid or async flows, so all updates build on this ref instead.
+  const messagesRef = useRef(messages);
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
+
   const sendMessage = async (text: string) => {
     const userMsg = new HumanMessage(text);
-    const updatedMessages = [...messages, userMsg];
-
-    setMessages(updatedMessages);
+    const snapshot = [...messagesRef.current, userMsg];
+    messagesRef.current = snapshot;
+    setMessages(snapshot);
     setLoading(true);
 
     try {
-      const reply = await agent.current.invoke({ messages: updatedMessages });
-      setMessages((_) => reply.messages);
+      const reply = await agent.current.invoke({ messages: snapshot });
+      // Only the agent's new tail is ours; anything written while awaiting
+      // (another message, a clear) must survive.
+      const tail = reply.messages.slice(snapshot.length);
+      const merged = [...messagesRef.current, ...tail];
+      messagesRef.current = merged;
+      setMessages(merged);
     } catch (err) {
-      setMessages((prev) => [...prev, new AIMessage(friendlyErrorMessage(err))]);
+      const next = [...messagesRef.current, new AIMessage(friendlyErrorMessage(err))];
+      messagesRef.current = next;
+      setMessages(next);
     } finally {
       setLoading(false);
     }
   };
 
   const clearMessages = () => {
-    setMessages(messages.slice(0, 1));
+    const next = messagesRef.current.slice(0, 1);
+    messagesRef.current = next;
+    setMessages(next);
   };
 
   return { messages, clearMessages, loading, sendMessage };
