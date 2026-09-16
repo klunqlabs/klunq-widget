@@ -1,3 +1,9 @@
+## [1.0.4](https://github.com/klunqlabs/klunq-widget/compare/v1.0.3...v1.0.4) (2026-09-16)
+
+### Bug Fixes
+
+- trim request history to half the context window and persist session chat history ([#5](https://github.com/klunqlabs/klunq-widget/issues/5)) ([71d0bf9](https://github.com/klunqlabs/klunq-widget/commit/71d0bf98bd146450a41333a9dbf5398f2bb010d6))
+
 ## [1.0.3](https://github.com/klunqlabs/klunq-widget/compare/v1.0.2...v1.0.3) (2026-09-09)
 
 ### Bug Fixes
