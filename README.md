@@ -60,9 +60,10 @@ Outputs `dist/klunq-widget.js` (IIFE, CSS inlined).
 - `data-api-key` — API key (or `ollama` for local)
 - `data-base-url` — OpenAI-compatible base URL
 
-**Optional attribute:**
+**Optional attributes:**
 
 - `data-scope` — `"page"` (default) agent only answers questions about the current page; `"broad"` agent may also answer general questions
+- `data-max-tokens` — total context window in tokens; overrides automatic detection (see [Context trimming](#context-trimming))
 
 The widget auto-injects a floating chat button into `document.body`.
 
@@ -102,7 +103,7 @@ The widget auto-injects a floating chat button into `document.body`.
 ## Architecture
 
 - **Entry** (`main.tsx`) creates `#klunq-widget-container` with closed Shadow DOM, injects CSS, detects dark mode, reads model config from `<script data-*>` attributes (prod) or defaults (dev), renders Preact into `#klunq-widget-root`.
-- **Agent** (`agent/agent.ts`) uses `@langchain/openai` with bound browser tools (`read_page_content`, `read_page_code`, `click_element`, `follow_link`, `set_field_value`). Runs a 25-step ReAct loop.
+- **Agent** (`agent/agent.ts`) uses `@langchain/openai` with bound browser tools (`read_page_content`, `read_page_code`, `click_element`, `follow_link`, `set_field_value`). Runs a 25-step ReAct loop. History is trimmed per model call to half the context window (see [Context trimming](#context-trimming)).
 - **Tools** (`agent/tools.ts`) execute in host page context via `window` — can read/click/type/navigate any element.
 - **Styling** — Tailwind v4 via `@tailwindcss/vite`. All colors use CSS custom properties (`--color-*`) defined in `@theme`. Dark overrides via `@media (prefers-color-scheme: dark)` and `.dark` class on shadow root.
 - **Connection monitoring** — On mount, the widget runs a token-free light check (`GET /v1/models`, then `/health/readiness`, then `/api/tags`). Checks repeat every 30s. A colored dot next to the Klunq logo reflects the current state: green (online), orange (no API key), red (error), amber (checking). Hovering the dot shows a tooltip with details. When the API is unreachable or no key is provided, all send controls are disabled.
@@ -123,12 +124,13 @@ Pass via `<script>` attributes:
 ></script>
 ```
 
-| Attribute       | Required | Default  | Description                                                                                 |
-| --------------- | -------- | -------- | ------------------------------------------------------------------------------------------- |
-| `data-model`    | yes      | —        | Model name                                                                                  |
-| `data-api-key`  | yes      | —        | API key                                                                                     |
-| `data-base-url` | yes      | —        | API base URL                                                                                |
-| `data-scope`    | no       | `"page"` | `"page"` — agent denies off-topic questions; `"broad"` — agent may answer general questions |
+| Attribute         | Required | Default  | Description                                                                                 |
+| ----------------- | -------- | -------- | ------------------------------------------------------------------------------------------- |
+| `data-model`      | yes      | —        | Model name                                                                                  |
+| `data-api-key`    | yes      | —        | API key                                                                                     |
+| `data-base-url`   | yes      | —        | API base URL                                                                                |
+| `data-scope`      | no       | `"page"` | `"page"` — agent denies off-topic questions; `"broad"` — agent may answer general questions |
+| `data-max-tokens` | no       | —        | Total context window in tokens; overrides automatic detection (see below)                   |
 
 ### Model Config (Development)
 
@@ -140,6 +142,29 @@ apiKey: "ollama";
 baseURL: "http://localhost:11434/v1";
 scope: "page"; // hardcoded, data-* attributes not read in dev
 ```
+
+### Context trimming
+
+Long conversations and page HTML dumps can overflow a model's context window. Before **every** model call, the agent trims the outgoing history with LangChain's default `trimMessages` (`strategy: "last"`), so only the newest history within budget is sent. The visible chat and stored thread keep the full history — trimming affects the request only.
+
+The history budget is half the context window, leaving the other half for the response and tool-loop growth. The window resolves as:
+
+```
+data-max-tokens                                  (explicit override, wins over everything)
+  ?? max(table lookup for the model, 32000)      (LangChain docs table, never below 32k)
+```
+
+| Model                                                              | Window    | History budget      |
+| ------------------------------------------------------------------ | --------- | ------------------- |
+| `gpt-4o(-mini)`, Claude, Gemini                                    | 128k–1M   | 64k+                |
+| `openai/gpt-4o` via LiteLLM proxy (`provider/` prefix is stripped) | 128k      | 64k                 |
+| Unknown local names (`gemma4`, `llama3.1`, …)                      | 32k floor | 16k (~64KB of text) |
+
+Notes:
+
+- The OpenAI API publishes no context lengths, so detection is a docs table plus the floor — not a live query. `data-max-tokens` is the escape hatch for anything it gets wrong.
+- The system prompt is always preserved outside the budget, and leading `ToolMessage`s cut off from their tool calls are dropped (they would cause provider `400` errors).
+- Legacy sub-32k models (e.g. `gpt-3.5-turbo` 4k) are lifted by the floor too — set `data-max-tokens` explicitly for those.
 
 ### Connection Status
 
