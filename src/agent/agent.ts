@@ -1,6 +1,7 @@
 import { ChatOpenAI } from "@langchain/openai";
-import { SystemMessage, ToolMessage } from "@langchain/core/messages";
+import { SystemMessage, ToolMessage, trimMessages } from "@langchain/core/messages";
 import type { BaseMessage } from "@langchain/core/messages";
+import { getModelContextSize } from "@langchain/core/language_models/base";
 import { browserTools } from "./tools";
 
 export interface ModelConfig {
@@ -8,6 +9,29 @@ export interface ModelConfig {
   apiKey: string;
   baseURL: string;
   scope?: "page" | "broad";
+  maxTokens?: number;
+}
+
+// LangChain's table returns a legacy ~4k default for unknown model names,
+// far too small for a page agent that reads HTML. Floor it: 32k window
+// (16k history budget) fits under almost every modern local model.
+export const MIN_CONTEXT_WINDOW = 32000;
+
+/** Strip LiteLLM-style `provider/` prefixes so table lookups hit. */
+export function stripProviderPrefix(name: string): string {
+  const i = name.lastIndexOf("/");
+  return i >= 0 ? name.slice(i + 1) : name;
+}
+
+/**
+ * History budget in tokens: half the context window, leaving the other
+ * half for the response and tool-loop growth.
+ */
+export function resolveHistoryBudget(config: ModelConfig): number {
+  const window =
+    config.maxTokens ??
+    Math.max(getModelContextSize(stripProviderPrefix(config.model)), MIN_CONTEXT_WINDOW);
+  return Math.floor(window / 2);
 }
 
 export const WATERMARK = `You are Klunq Widget — an AI assistant that acts as the user's direct interface to the webpage they are viewing in this browser tab. You are deployed on the specific website the user is currently viewing with a limited purpose: to read, summarize, explain, and operate this page via the provided browser tools (read_page_content, read_page_code, click_element, follow_link, set_field_value). You must ground all page-related answers in tool observations and never hallucinate page content. You must only interact with the current page in this browser; you cannot access other tabs or systems.
@@ -224,10 +248,25 @@ export function getAgent(config: ModelConfig) {
   return {
     async invoke({ messages }: { messages: BaseMessage[] }) {
       const systemMsg = new SystemMessage(buildSystemPrompt(config.scope ?? "page"));
+      const budget = resolveHistoryBudget(config);
       const currentMessages: (typeof systemMsg | BaseMessage)[] = [systemMsg, ...messages];
 
       for (let i = 0; i < 25; i++) {
-        const response = await modelWithTools.invoke(currentMessages);
+        let trimmed: BaseMessage[];
+        try {
+          trimmed = await trimMessages(currentMessages, {
+            maxTokens: budget,
+            tokenCounter: model,
+            strategy: "last",
+            includeSystem: true,
+            startOn: ["human", "ai"],
+            allowPartial: false,
+          });
+        } catch (err) {
+          console.warn("Message trimming failed, sending untrimmed history.", err);
+          trimmed = currentMessages;
+        }
+        const response = await modelWithTools.invoke(trimmed);
         currentMessages.push(response);
 
         const toolCalls = response?.tool_calls ?? [];

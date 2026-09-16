@@ -10,6 +10,7 @@ vi.mock("@langchain/openai", () => ({
     return {
       invoke: mockInvoke,
       bindTools: vi.fn().mockReturnValue({ invoke: mockAgentInvoke }),
+      getNumTokens: vi.fn(async (text: unknown) => Math.ceil(String(text).length / 4)),
     };
   }),
 }));

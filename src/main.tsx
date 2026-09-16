@@ -48,11 +48,19 @@ if (import.meta.env.DEV) {
 
   const scope = scriptEl.dataset.scope === "broad" ? ("broad" as const) : ("page" as const);
 
+  let maxTokens: number | undefined;
+  const maxTokensRaw = scriptEl.dataset.maxTokens;
+  if (maxTokensRaw !== undefined && maxTokensRaw !== "") {
+    const parsed = Number.parseInt(maxTokensRaw, 10);
+    if (Number.isSafeInteger(parsed) && parsed > 0) maxTokens = parsed;
+  }
+
   modelConfig = {
     model: scriptEl.dataset.model,
     apiKey: scriptEl.dataset.apiKey ?? "",
     baseURL: scriptEl.dataset.baseUrl,
     scope,
+    maxTokens,
   };
 }
 

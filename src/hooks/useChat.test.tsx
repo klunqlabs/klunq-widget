@@ -23,7 +23,10 @@ beforeEach(() => {
 const modelConfig: ModelConfig = { model: "m", apiKey: "k", baseURL: "u" };
 const welcome = new AIMessage("Welcome");
 
-function harness(initialMessages: BaseMessage[] = [welcome]) {
+function harness(
+  initialMessages: BaseMessage[] = [welcome],
+  probe?: { current: ReturnType<typeof useChat> | null },
+) {
   function Harness({ msgs: init }: { msgs: BaseMessage[] }) {
     const [msgs, setMsgs] = useState<BaseMessage[]>(init);
     const [loading, setLoading] = useState(false);
@@ -32,13 +35,15 @@ function harness(initialMessages: BaseMessage[] = [welcome]) {
         <MessagesContext.Provider
           value={{ messages: msgs, setMessages: setMsgs, loading, setLoading }}
         >
-          <Consumer />
+          <Consumer probe={probe} />
         </MessagesContext.Provider>
       </ModelConfigContext.Provider>
     );
   }
-  function Consumer() {
-    const { messages, loading, sendMessage, clearMessages } = useChat();
+  function Consumer({ probe }: { probe?: { current: ReturnType<typeof useChat> | null } }) {
+    const chat = useChat();
+    if (probe) probe.current = chat;
+    const { messages, loading, sendMessage, clearMessages } = chat;
     return (
       <div>
         <span data-testid="count">{messages.length}</span>
@@ -155,6 +160,46 @@ describe("useChat", () => {
     expect(getByTestId("count").textContent).toBe("2");
     fireEvent.click(getByTestId("clear"));
     expect(getByTestId("count").textContent).toBe("1");
+  });
+
+  it("keeps both user messages on rapid double send", async () => {
+    mockInvoke.mockImplementation(async ({ messages }: { messages: BaseMessage[] }) => ({
+      messages: [...messages, new AIMessage("reply")],
+    }));
+    // Call twice synchronously in the same tick: no re-render happens in
+    // between, so a snapshot-based implementation drops the first message.
+    const probe: { current: ReturnType<typeof useChat> | null } = { current: null };
+    harness([welcome], probe);
+    probe.current!.sendMessage("a");
+    probe.current!.sendMessage("b");
+    await waitFor(() => {
+      expect(mockInvoke).toHaveBeenCalledTimes(2);
+    });
+    // The second request must include the first user message.
+    const secondArgs = mockInvoke.mock.calls[1][0] as { messages: BaseMessage[] };
+    expect(secondArgs.messages.length).toBe(3);
+  });
+
+  it("merges a late reply instead of overwriting newer messages", async () => {
+    const pending: Array<(v: { messages: BaseMessage[] }) => void> = [];
+    mockInvoke.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          pending.push(resolve);
+        }),
+    );
+    const { getByTestId } = harness([welcome]);
+    fireEvent.click(getByTestId("send"));
+    fireEvent.click(getByTestId("send"));
+    expect(mockInvoke).toHaveBeenCalledTimes(2);
+    const snapA = mockInvoke.mock.calls[0][0] as { messages: BaseMessage[] };
+    const snapB = mockInvoke.mock.calls[1][0] as { messages: BaseMessage[] };
+    pending[0]!({ messages: [...snapA.messages, new AIMessage("r1")] });
+    pending[1]!({ messages: [...snapB.messages, new AIMessage("r2")] });
+    await waitFor(() => {
+      // welcome + 2 humans + both reply tails; nothing is lost.
+      expect(getByTestId("count").textContent).toBe("5");
+    });
   });
 
   it("creates agent once with the model config from context", () => {
